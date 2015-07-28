@@ -1,0 +1,34 @@
+#top-filters {
+  background: #909090;
+}
+
+.top-filters-startview {
+  height: 100px;
+  width: 100%;
+}
+
+.top-filters-mapview {
+  width: 100%;
+  height: 50px;
+}
+
+#side-bar {
+  background: #9A9A9A;
+}
+
+.side-bar-startview {
+  height: 100%;
+  width: 100%;
+}
+
+.side-bar-mapview {
+  height: 100%;
+  width: 200px;
+  float: right;
+}
+
+#map-canvas {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
