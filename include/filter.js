@@ -150,7 +150,5 @@ var useUpdatedLocation = function(location) {
 };
 
 var callUpdate = function() {
-  var loc = {address_components: autocomplete.getPlace().address_components,
-    geometry: autocomplete.getPlace().geometry};
-  generateRecommended(loc, filter);
+  generateRecommended(autocomplete.getPlace(), filter);
 };
