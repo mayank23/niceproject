@@ -1,11 +1,21 @@
 var filter = undefined;
 
 $(function() {
-  filter = {};
+  filter = {
+    price: {val: [], priority: 8},
+    competitors: {priority: 7},
+    providers: {priority: 6},
+    wealth: {val: 2, priority: 5},
+    walkscore: {priority: 4},
+    age: {val: 2, priority: 3},
+    population: {priority: 2},
+    distance: {priority: 1}
+  };
 
   var updateCostSlider = function(values) {
     $("#cost-slider-indicator").val("$" + values[0] + " - $" + values[1]);
-    filter.cost = [values[0], values[1]];
+    filter.price.val = [values[0], values[1]];
+    useUpdatedFilter();
   };
   $("#cost-slider").slider({
     range: true,
@@ -34,8 +44,9 @@ $(function() {
     }
 
     console.log(indicator);
-    filter.weatlh = wealth;
+    filter.wealth.val = wealth;
     $("#wealth-indicator").html(indicator);
+    useUpdatedFilter();
   };
 
   $("#wealth-slider").slider({
@@ -63,8 +74,9 @@ $(function() {
       indicator = "56+";
     }
 
-    filter.age = age;
+    filter.age.val = age;
     $("#age-indicator").html(indicator);
+    useUpdatedFilter();
   };
 
   $("#age-slider").slider({
@@ -77,3 +89,11 @@ $(function() {
   });
   updateAgeIndicator(2);
 });
+
+var getPositionInRankings = function(filterName) {
+  return 8 - $(filterName).index("#sortable-filters li");
+};
+
+var useUpdatedFilter = function() {
+  console.log(filter);
+};
