@@ -4,7 +4,7 @@ var STARTVIEW = 0;
 var MEDVIEW = 1;
 var ENDVIEW = 2;
 var currView = STARTVIEW;
-var map = $("#map-canvas").gmap3("get");
+var map;
 
 var showMapView = function() {
   console.log("showmapview is called");
@@ -28,8 +28,25 @@ var showMapView = function() {
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
   });
+    map  = $("#map-canvas").gmap3("get");
   $("#side-bar").tabs();
   currView = ENDVIEW;
+
+  $(".disable-filter").click(function(){
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("enabled")
+        .addClass("disabled");
+    filterElem.appendTo("#sortable-filters");
+    reorderFilters();
+  });
+
+  $(".enable-filter").click(function() {
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("disabled")
+        .addClass("enabled");
+    filterElem.prependTo("#sortable-filters");
+    reorderFilters();
+  })
 };
 
 var recalcSize = function() {
@@ -48,6 +65,7 @@ $(document).ready(function() {
   autocomplete = new google.maps.places.Autocomplete(input);
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     mapLocation = autocomplete.getPlace().geometry.location;
+    useUpdatedLocation(autocomplete.getPlace());
     if (currView === STARTVIEW)
       showFilterView();
   });
@@ -56,6 +74,7 @@ $(document).ready(function() {
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
 
+  $("#sortable-filters").on("sortupdate", reorderFilters);
 });
 
 var showFilterView = function() {
@@ -149,7 +168,7 @@ function fillTable(results) {
     deleteTable();
     var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
     for (var i = 0; i < results.length; i++) {
-        html += '<tr><td>' + (parseInt(results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+        html += '<tr><td>' + parseInt((results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
     }
 
     $('#resultsTable tr').first(html).after(html);

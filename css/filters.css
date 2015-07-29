@@ -23,3 +23,23 @@
 .filter-disabled {
   background: grey;
 }
+
+.disable-filter {
+  float: right;
+}
+
+.disabled {
+  background-color: green;
+}
+
+.enabled {
+  background-color: #fff;
+}
+
+.disabled .disable-filter {
+  display: none;
+}
+
+.enabled .enable-filter {
+  display: none;
+}

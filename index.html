@@ -53,82 +53,106 @@
       </ul>
       <div id="filters" class="filters">
        <ul class="ca-menu" id="sortable-filters">
-       <li class="filter-price">
+       <li class="filter-price enabled">
           <a href="#">
-            <span class="ca-icon"><img src="css/img/magnifier.svg"/></span>
+            <span class="ca-icon"><img src="css/img/magnifyingglass.png"/></span>
             <div class="ca-content">
-              <h4 class="ca-main">Property Price</h4>
+              <h4 class="ca-main">Property Price
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h4>
               <h5 for="cost-slider-indicator" style="word-wrap:break-word"class="ca-sub">Only show me properties in this range of prices:</h5>
                    <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold; background-color:transparent">
               <div id="cost-slider"></div>
             </div>
           </a>
         </li>
-        <li class="filter-competitors">
+        <li class="filter-competitors enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/group.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Competitors</h2>
+              <h2 class="ca-main">Competitors
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Personalized to your needs</h3>
             </div>
           </a>
         </li>
-        <li class="filter-providers">
+        <li class="filter-providers enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/deliver.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Restaurant Providers</h2>
+              <h2 class="ca-main">Restaurant Providers
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Advanced use of technology</h3>
             </div>
           </a>
         </li>
-        <li class="filter-income">
+        <li class="filter-income enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/money.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Median Income</h2>
+              <h2 class="ca-main">Median Income
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Favor Neighborhoods with</h3>
               <h5 id="wealth-indicator" for="wealth-slider" eadonly style="border:0; color:#f6931f; font-weight:bold; background-color:transparent"class="ca-sub">Moderate affluency</h5>
               <div id="wealth-slider"></div>
             </div>
           </a>
         </li>
-        <li class="filter-walkscore">
+        <li class="filter-walkscore enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/walking.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Walk Score</h2>
+              <h2 class="ca-main">Walk Score
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Professionals in action</h3>
             </div>
           </a>
         </li>
-        <li class="filter-age">
+        <li class="filter-age enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/age.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Median Age</h2>
+              <h2 class="ca-main">Median Age
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Professionals in action</h3>
               <h5 id="age-indicator" for="age-slider" eadonly style="border:0; color:#f6931f; font-weight:bold; background-color:transparent"class="ca-sub">26-32</h5>
               <div id="age-slider"></div>
             </div>
           </a>
         </li>
-        <li class="filter-population">
+        <li class="filter-population enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/population.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Population</h2>
+              <h2 class="ca-main">Population
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Professionals in action</h3>
               <h5 id="population-indicator" for="population-slider" eadonly style="border:0; color:#f6931f; font-weight:bold; background-color:transparent"class="ca-sub">26-32</h5>
               <div id="population-slider"></div>
             </div>
           </a>
         </li>
-        <li class="filter-distance">
+        <li class="filter-distance enabled">
           <a href="#">
             <span class="ca-icon"><img src="css/img/distance.png"/></span>
             <div class="ca-content">
-              <h2 class="ca-main">Distance From Origin</h2>
+              <h2 class="ca-main">Distance From Origin
+                <span href="#" class="disable-filter glyphicon glyphicon-remove"></span>
+                <span href="#" class="enable-filter glyphicon glyphicon-ok"></span>
+              </h2>
               <h3 class="ca-sub">Professionals in action</h3>
             </div>
           </a>
@@ -190,17 +214,6 @@
 </div>
 
 <script src="include/svgcheckbx.js"></script>
-
-<script>
-generateRecommended({
-  location:{
-    geometry:{
-      G: 33.4500,
-      K: -112.0667
-    }
-  }
-},{});
-</script>
 
 </body>
 </html>
