@@ -28,7 +28,8 @@ var showMapView = function() {
     $("#map-canvas").gmap3("get").setCenter(mapLocation);
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
-    $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
+    $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location)
+      useUpdatedLocation(autocomplete.getPlace());
   });
     map  = $("#map-canvas").gmap3("get");
   $("#side-bar").tabs();
@@ -70,7 +71,6 @@ $(document).ready(function() {
   autocomplete = new google.maps.places.Autocomplete(input);
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     mapLocation = autocomplete.getPlace().geometry.location;
-    useUpdatedLocation(autocomplete.getPlace());
     if (currView === STARTVIEW)
       showFilterView();
   });
