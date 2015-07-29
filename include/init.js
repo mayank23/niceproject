@@ -26,10 +26,25 @@ var showMapView = function() {
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
-    useUpdatedLocation(autocomplete.getPlace());
   });
   $("#side-bar").tabs();
   currView = ENDVIEW;
+
+  $(".disable-filter").click(function(){
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("enabled")
+        .addClass("disabled");
+    filterElem.appendTo("#sortable-filters");
+    reorderFilters();
+  });
+
+  $(".enable-filter").click(function() {
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("disabled")
+        .addClass("enabled");
+    filterElem.prependTo("#sortable-filters");
+    reorderFilters();
+  })
 };
 
 var recalcSize = function() {
@@ -48,6 +63,7 @@ $(document).ready(function() {
   autocomplete = new google.maps.places.Autocomplete(input);
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     mapLocation = autocomplete.getPlace().geometry.location;
+    useUpdatedLocation(autocomplete.getPlace());
     if (currView === STARTVIEW)
       showFilterView();
   });
@@ -56,19 +72,7 @@ $(document).ready(function() {
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
 
-  $("#sortable-filters").on("sortupdate", function() {
-    console.log("it's go time");
-    filter.price.priority = getPositionInRankings(".filter-price");
-    filter.competitors.priority = getPositionInRankings(".filter-competitors");
-    filter.providers.priority = getPositionInRankings(".filter-providers");
-    filter.wealth.priority = getPositionInRankings(".filter-income");
-    filter.walkscore.priority = getPositionInRankings(".filter-walkscore");
-    filter.age.priority = getPositionInRankings(".filter-age");
-    filter.population.priority = getPositionInRankings(".filter-population");
-    filter.distance.priority = getPositionInRankings(".filter-distance");
-
-    useUpdatedFilter();
-  });
+  $("#sortable-filters").on("sortupdate", reorderFilters);
 });
 
 var showFilterView = function() {
