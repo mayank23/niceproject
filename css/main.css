@@ -68,6 +68,7 @@ html, body {
 #searchbox {
   width: 80%;
   height: 160px;
+  z-index: 500;
   -webkit-transform: translate3d(0,3em,0);
   transform: translate3d(0,3em,0);
   position: absolute;
@@ -88,6 +89,7 @@ html, body {
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
   font-family: 'Raleway', Arial, sans-serif;
+  z-index:500;
 
 }
 
@@ -97,13 +99,44 @@ html, body {
   width: 80px;
   height: 80px;
   overflow: hidden;
-  right: 5%;
-  top: 25%;
+  right: 10%;
+  top: 23%;
   background: transparent url(img/magnifier.svg) no-repeat center center;
   background-size: 100%;
   border: none;
-  pointer-events: none;
   transform-origin: 50% 50%;
   opacity: .7;
+  z-index:1000;
   
+}
+#search-submit:mouseover{
+  opacity:1;
+  cursor: pointer;
+}
+#search-submit:hover {
+  opacity:1;
+  cursor: pointer;
+}
+
+.pac-container .pac-item {
+  line-height:100px;
+  font-family:'Raleway';
+  font-size: 2em;
+}
+
+.pac-item .pac-item-query {
+  font-size: 2em;
+  margin-right: 15px;
+}
+
+.pac-item .pac-item-query .pac-matched {
+  font-weight: 100;
+}
+
+.hdpi .pac-icon {
+  background-position: 0;
+  width:30px;
+  height:35px;
+  margin-top:40px;
+  background-image: url("img/marker.png")
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javaScript" src="../../include/jquery-2.1.4.min.js"></script>
+    <script type="text/javaScript" src="googlePlaces.js"></script>
+  </head>
+  <body>
+    
+    <div id="test"></div>
+
+
+
+    <script type="text/javaScript">
+      googlePlaces.placesNearAddr('restaurants near tempe, az', function(data){
+
+        console.log(data.results);
+        
+      });
+    </script>
+  </body>
+</html>
