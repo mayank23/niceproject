@@ -1,17 +1,15 @@
-var filter = undefined;
+var filter = {
+  price: {val: [], priority: 8},
+  competitors: {priority: 7},
+  providers: {priority: 6},
+  wealth: {val: 2, priority: 5},
+  walkscore: {priority: 4},
+  age: {val: 2, priority: 3},
+  population: {priority: 2},
+  distance: {priority: 1}
+};;
 
 $(function() {
-  filter = {
-    price: {val: [], priority: 8},
-    competitors: {priority: 7},
-    providers: {priority: 6},
-    wealth: {val: 2, priority: 5},
-    walkscore: {priority: 4},
-    age: {val: 2, priority: 3},
-    population: {priority: 2},
-    distance: {priority: 1}
-  };
-
   var updateCostSlider = function(values) {
     $("#cost-slider-indicator").val("$" + values[0] + " - $" + values[1]);
     filter.price.val = [values[0], values[1]];
@@ -22,7 +20,7 @@ $(function() {
     min: 0,
     max: 500,
     values: [75, 300],
-    slide: function(event, ui) {
+    stop: function(event, ui) {
       updateCostSlider(ui.values);
     }
   });
@@ -88,6 +86,36 @@ $(function() {
     }
   });
   updateAgeIndicator(2);
+
+  var updatePopIndicator = function(age) {
+    var indicator;
+
+    if (age === 0) {
+      indicator = "very low population";
+    } else if (age === 1) {
+      indicator = "low population";
+    } else if (age === 2) {
+      indicator = "moderate population";
+    } else if (age === 3) {
+      indicator = "high population";
+    } else if (age === 4) {
+      indicator = "very high population";
+    }
+
+    filter.age.val = age;
+    $("#population-indicator").html(indicator);
+    useUpdatedFilter();
+  };
+
+  $("#population-slider").slider({
+    min: 0,
+    max: 4,
+    value: 2,
+    stop: function(event, ui) {
+      updatePopIndicator(ui.value);
+    }
+  });
+  updatePopIndicator(2);
 });
 
 var getPositionInRankings = function(filterName) {
