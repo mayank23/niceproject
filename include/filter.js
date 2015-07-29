@@ -22,15 +22,15 @@ $(function() {
     var indicator;
 
     if (wealth === 0) {
-      indicator = "very low wealth";
+      indicator = "Very Low Wealth";
     } else if (wealth === 1) {
-      indicator = "low wealth";
+      indicator = "Low Wealth";
     } else if (wealth === 2) {
-      indicator = "moderate wealth";
+      indicator = "Moderate Wealth";
     } else if (wealth === 3) {
-      indicator = "high wealth";
+      indicator = "High Wealth";
     } else if (wealth === 4) {
-      indicator = "very high wealth";
+      indicator = "Very High Wealth";
     }
 
     console.log(indicator);
@@ -46,5 +46,5 @@ $(function() {
       updateWealthIndicator(ui.value);
     }
   });
-  updateWealthIndicator(3);
+  updateWealthIndicator(2);
 });

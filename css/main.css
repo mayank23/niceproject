@@ -100,6 +100,9 @@ html, body {
   -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
   transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 }
+.medview #side-bar{
+  display:none;
+}
 
 #searchbox-large {
   width: 80%;
@@ -285,6 +288,7 @@ html, body {
 
 #sortable-filters li {
   padding: 0px;
+  height:150px;
 }
 
 .ui-tabs .ui-tabs-panel {
@@ -336,6 +340,7 @@ html, body {
     color: #333;
     position: relative;
 }
+
 .ca-icon{
     font-family: 'WebSymbolsRegular', cursive;
     font-size: 40px;
@@ -355,7 +360,7 @@ html, body {
 .ca-content{
     position: absolute;
     left: 120px;
-    width: 370px;
+    width: 250px;
     height: 60px;
     top: 20px;
     font-family:'Raleway';
