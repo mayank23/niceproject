@@ -9,7 +9,8 @@
         var data = [];
 
         $(document).ready(function() {
-            getOpenRealEstate(33.4500, -112.0667, 2);
+            var data = getOpenRealEstate(33.4500, -112.0667, 2);
+            var x = 7;
         });
 
         function getWalkScore(address) {
@@ -107,7 +108,7 @@
             var closeCompetitors = 0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
-                if (getDistance(comp.lat, comp.long, originLat, originLon) <= 5) {
+                if (getDistance(comp.geometry.location.lat, comp.geometry.location.long, originLat, originLon) <= 5) {
                     closeCompetitors++;
                 }
                 if (closeCompetitors > 10) {
@@ -137,7 +138,7 @@
             var minDistance = 0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
-                if (getDistance(comp.lat, comp.long, originLat, originLon) < minDistance) {
+                if (getDistance(comp.geometry.location.lat, comp.geometry.location.long, originLat, originLon) < minDistance) {
                     minDistance = getDistance(comp.lat, comp.long, originLat, originLon);
                 }
             }
