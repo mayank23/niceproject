@@ -11,7 +11,7 @@
       var providers;
 
       function callMapFunction() {
-          addRealEstateToMap(propertyScores);
+
       }
 
       function generateRecommended(lat, lng, filters)
@@ -45,6 +45,9 @@
                 return b.rank - a.rank;
             });
             fillTable(propertyScores);
+            addRealEstateToMap(propertyScores);
+            addCompetitorsToMap(competitors);
+            addProvidersToMap(providers);
 
             console.log(propertyScores);
         }
@@ -106,7 +109,6 @@
                 // results are competitors.
                   var results = data.results;
                   competitors = results;
-                  addCompetitorsToMap(results);
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, filters['competitors'].priority, function (resultScore, maxScore) {
 
@@ -120,17 +122,48 @@
 
                   });
 
-                  getRestaurantProviderScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
-                      if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
-                          propertyScores[index].score += resultScore;
-                          propertyScores[index].maxScore += maxScore;
 
-                      }
-                    count++;
-                    checkAllFinished(count);
-                    });
               }
             });
+
+
+            $.ajax({
+                url: 'http://10.22.253.245/places?'+'query='+'restaurant suppliers near ' + realEstate.address,
+                dataType: 'json',
+                success: function(data){
+                    // results are competitors.
+                    var results = data.results;
+                    providers = results;
+
+                    // calculate scores based on competitors now.
+                    getCompetitorScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
+
+                        if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                            propertyScores[index].score += resultScore;
+                            propertyScores[index].maxScore += maxScore;
+
+                        }
+                        count++;
+                        checkAllFinished(count);
+
+                    });
+
+
+                }
+            });
+
+            /*
+
+             getRestaurantProviderScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
+             if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+             propertyScores[index].score += resultScore;
+             propertyScores[index].maxScore += maxScore;
+
+             }
+             count++;
+             checkAllFinished(count);
+             });
+             */
 
 
 
