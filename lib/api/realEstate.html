@@ -3,26 +3,31 @@
     <title></title>
 </head>
 <body>
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
-    </script src="../include/async.js"></script>
+    <script src="../../include/jquery-2.1.4.min.js"></script>
+    <script src="../../include/async.js"></script>
+    <script src="../../include/citysdk.js" type="text/javascript"></script>
+    <script src="../../include/citysdk.census.js" text="text/javascript"></script>
     <script>
         var propertyScores = [];
         var finishedCount = 0;
-
+        var totalFilters = 8;
         var properties;
         var olat = 33.4500;
         var olong = -112.0667;
+        var sdk = new CitySDK();
+        var censusModule = sdk.modules.census;
+
+        censusModule.enable("c1b2930d3ce73910373c35fe2a4bddae76fd3492");
 
         $(document).ready(function() {
             // get all open real estate.
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
-                console.log(properties);
                 
                 for(var i=0;i<properties.length;i++)
                 {
                     // init property score object.
-                    propertyScores[i] = {propertyIndex: i, score: 0, filterPercentages:[]};
+                    propertyScores[i] = {propertyInfo: properties[i], score: 0, maxScore: 0, rank: 0};
                     // eval property
                     evaluteRealEstate(properties[i], i);
                 }
@@ -31,15 +36,21 @@
         // once all property scores have finished evaluating.
         function onDataComplete()
         {
+                // calculate percentage matches.
+                for(var i=0;i<propertyScores.length;i++)
+                {
+                    propertyScores[i].rank = 100 * (propertyScores[i].score / propertyScores[i].maxScore);
+                }
+
                 propertyScores = propertyScores.sort(function(a,b){
-                    return b.score - a.score;
+                    return b.rank - a.rank;
                 });
                 console.log(propertyScores);
         }
 
         function checkAllFinished(count)
         {
-            if(count === 3)
+            if(count === totalFilters)
             {
                 finishedCount++;
                 if(finishedCount === properties.length)
@@ -51,22 +62,30 @@
 
         function evaluteRealEstate(realEstate, index){
             var count = 0;
+            var address = realEstate.propertyInfo.address;
+            var zipcode = address.substring(address.lastIndexOf(" ") + 1);
             // non competitor scoring.
             getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
-                propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
+                propertyScores[index].maxScore += maxScore;
                 count++;
                 checkAllFinished(count);
             });
 
-            //getOriginDistanceScore(properties[i]., longitude, originLat, originLong, radius, userRank, callback)
-
-            /*
-            
-            getPriceScore(200000, realEstate.price , function(resultScore, maxScore){
-                    propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
+            getOriginDistanceScore(properties[index].lat, properties[index].lng, olat, olong, 3, 3, function(resultScore, maxScore){
+                propertyScores[index].score += resultScore;
+                propertyScores[index].maxScore += maxScore;
+                count++;
+                checkAllFinished(count);  
             });
-            */  
+
+            
+            getPriceScore(200000, 15000, realEstate.price, 2, function(resultScore, maxScore){
+                    propertyScores[index].score += resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);  
+            });
 
             // get competitors and async update score.
             $.ajax({
@@ -77,20 +96,45 @@
                  var results = data.results;
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
+                    
                     propertyScores[index].score+=resultScore;
-                    propertyScores[index].filterPercentages['competitor_score'] = (resultScore / maxScore) * 100;
+                    propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
+                  
                   });
                  
                   getRestaurantScore(results, olat, olong, 3, function(resultScore, maxScore){
                     propertyScores[index].score+=resultScore;
-                    propertyScores[index].filterPercentages['restaurant_score'] = (resultScore / maxScore) * 100;
+                    propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
                     });
               }
             });
+
+            gatherCensusData(zipcode, function(data) {
+                rankIncome(4, 5, data, function(resultScore, maxScore) { 
+                    propertyScores[index].score+=resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);
+                });
+                rankPopulation(3, 3, data, function(resultScore, maxScore) {
+                    propertyScores[index].score+=resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);
+                });
+                rankAgeRange(2, 1, data, function(resultScore, maxScore) {
+                    propertyScores[index].score+=resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);
+                });
+            });
+
+
         }
 
         function getOpenRealEstate(latitude, longitude, miles, callback) {
@@ -249,16 +293,109 @@
                     } else {
                         result =  0;
                     }
-
-                    callback(result, 4*userRank);
+                    callback(result, 4* userRank);
                 }
             });
         }
-
-        function getPriceScore(maxPrice, curPrice, userRank, callback) {
-            return callback(curPrice > maxPrice ? callback(0) : callback(4), 4 * userRank);
+   
+        function getPriceScore(maxPrice, minPrice, curPrice, userRank, callback) {
+            var rank = 0;
+            if (curPrice >= minPrice && curPrice <= maxPrice) {
+                rank = 4;
+            }
+            return callback(rank * userRank, 4 * userRank);
         }
 
+        function gatherCensusData(zipCode, callback) {
+            var request = {
+                "level": "tract",
+                "zip": zipCode,
+                "variables": [
+                    "population",
+                    "population_white_alone",
+                    "population_black_alone",
+                    "population_asian_alone",
+                    "population_hispanic_origin",
+                    "income_per_capita",
+                    "age"
+                ]}
+
+                censusModule.APIRequest(request, function (response) {
+                        callback(response.data[0]);
+                    });
+        }
+
+        function rankIncome(userRankingPreference, importance, data, callback) {
+            var trueIncome = data.income_per_capita;
+            var rank;
+
+            if (trueIncome <=  12000) {
+                rank = 0;
+            }
+            else if (trueIncome <= 30000 && trueIncome > 12000) {
+                rank = 1;
+            }
+            else if (trueIncome <= 55000 && trueIncome > 30000) {
+                rank = 2;
+            }
+            else if (trueIncome <= 80000 && trueIncome > 55000) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            callback(finalRank * importance, 4* userRankingPreference);
+        }
+
+        function rankPopulation(userRankingPreference, importance, data, callback) {
+            var truePopulation = data.population;
+            var rank;
+
+            if (truePopulation <=  2000) {
+                rank = 0;
+            }
+            else if (truePopulation <= 3000 && truePopulation > 2000) {
+                rank = 1;
+            }
+            else if (truePopulation <= 4500 && truePopulation > 3000) {
+                rank = 2;
+            }
+            else if (truePopulation < 5500 && truePopulation > 4500) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            callback(finalRank * importance, 4*userRankingPreference);
+        }
+
+        function rankAgeRange(userRankingPreference, importance, data, callback) {
+            var trueAgeRange = data.age;
+            var rank;
+
+            if (trueAgeRange <=  25) {
+                rank = 0;
+            }
+            else if (trueAgeRange < 33 && trueAgeRange > 25) {
+                rank = 1;
+            }
+            else if (trueAgeRange < 43 && trueAgeRange >= 33) {
+                rank = 2;
+            }
+            else if (trueAgeRange <= 43 && trueAgeRange >= 55) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            callback(finalRank * importance, 4*userRankingPreference);
+        }
 
     
     </script>
