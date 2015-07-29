@@ -19,7 +19,7 @@ var recalcSize = function() {
 };
 
 $(document).ready(function() {
-  var input = (document.getElementById('searching'));
+  var input = (document.getElementById('searching-small'));
   console.log(input);
   var autocomplete = new google.maps.places.Autocomplete(input);
   $("#go-to-mapview").click(showMapView);
