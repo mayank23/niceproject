@@ -60,6 +60,7 @@
                 finishedCount++;
                 if(finishedCount === properties.length)
                 {
+                    finishedCount=0;
                     onDataComplete();
                 }
             }
