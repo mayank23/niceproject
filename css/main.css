@@ -309,7 +309,7 @@ html, body {
 
 #sortable-filters li {
   padding: 0px;
-  height:150px;
+  height:200px;
 }
 
 .ui-tabs .ui-tabs-panel {
@@ -359,6 +359,10 @@ html, body {
     display: block;
     color: #333;
     position: relative;
+}
+
+.navbar-brand {
+    margin-top: -10px;
 }
 
 .ca-icon{

@@ -5,6 +5,8 @@ var MEDVIEW = 1;
 var ENDVIEW = 2;
 var currView = STARTVIEW;
 var map;
+var markers = [];
+
 
 var showMapView = function() {
   console.log("showmapview is called");
@@ -12,7 +14,7 @@ var showMapView = function() {
   $('#search-submit-mid').attr('id','search-submit-small');
   $('#searchbox-mid').attr('id','searchbox-small');
   $('#mid').attr('id','finish');
-
+    $('#filter-div').height("0px");
 
 
   $("body").removeClass("medview")
@@ -20,13 +22,14 @@ var showMapView = function() {
 
   recalcSize();
   $("#map-canvas").show().gmap3({
-    map: {options: {zoom:12}}
+    map: {options: {zoom:14}}
   });
   if (mapLocation) {
     $("#map-canvas").gmap3("get").setCenter(mapLocation);
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
-    $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
+    $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location)
+      useUpdatedLocation(autocomplete.getPlace());
   });
     map  = $("#map-canvas").gmap3("get");
   $("#side-bar").tabs();
@@ -46,7 +49,9 @@ var showMapView = function() {
         .addClass("enabled");
     filterElem.prependTo("#sortable-filters");
     reorderFilters();
-  })
+
+  });
+  reorderFilters();
     callMapFunction();
 };
 
@@ -66,7 +71,6 @@ $(document).ready(function() {
   autocomplete = new google.maps.places.Autocomplete(input);
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     mapLocation = autocomplete.getPlace().geometry.location;
-    useUpdatedLocation(autocomplete.getPlace());
     if (currView === STARTVIEW)
       showFilterView();
   });
@@ -76,6 +80,7 @@ $(document).ready(function() {
   $("#search-submit-large").click(showFilterView);
 
   $("#sortable-filters").on("sortupdate", reorderFilters);
+  $("#button-submit").click(submitForm);
 });
 
 var showFilterView = function() {
@@ -102,10 +107,9 @@ function addCompetitorsToMap(competitors) {
             icon: {
                 url: '/css/img/competitoricon.png',
             },
-            optimized: false,
             animation: google.maps.Animation.DROP,
-            label: competitors[i].name
         });
+        markers.push(marker);
     }
 }
 
@@ -120,10 +124,9 @@ function addProvidersToMap(providers) {
             icon: {
                 url: '/css/img/restaurantprovidericon.png'
             },
-            optimized: false,
             animation: google.maps.Animation.DROP,
-            label: providers[i].name
         });
+        markers.push(marker);
     }
 }
 
@@ -134,15 +137,20 @@ function addRealEstateToMap(locations) {
             position: latlng,
             map: map,
             draggable: false,
-            opacity: 1.0,
             icon: {
                 url: '/css/img/realestateicon.png'
             },
             animation: google.maps.Animation.DROP,
-            optimized: false,
-            label: locations[i].propertyInfo.overview
         });
+        markers.push(marker);
     }
+}
+
+function deleteMarkers() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = [];
 }
 
 //delete table data, keep headers
@@ -160,11 +168,39 @@ function fillTable(results) {
     deleteTable();
     var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
     for (var i = 0; i < results.length; i++) {
-        html += '<tr><td>' + parseInt((results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+        html += '<tr ><td style="color:#FF9933">' + parseInt((results[i].rank)) + '% Match</td><td style="color:#77c043">' + results[i].propertyInfo.address + '</br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + ' per month</td></tr>';
     }
 
     $('#resultsTable tr').first(html).after(html);
     $('#resultsTable tr:first').remove();
 }
 
+var submitForm = function() {
+  console.log("form is submitted");
+  $("#filter-select li").each(function(child) {
+    child = $(this);
+    console.log("child!" + child.text());
+    console.log(child);
+    console.log(child.find("input"));
+    if (!child.find("input").is(":checked")) {
+      disableFilter(child.find("input").attr("filter"));
+      console.log("disabled: " + child.find("input").attr("filter"));
+    }
+    else
+      console.log("the child was enabled :)");
+  });
+  showMapView();
+};
+
 $(window).resize(recalcSize);
+
+
+
+var disableFilter = function(filter) {
+  console.log("gotta disable " + filter)
+  var filterElem = $("." + filter);
+  console.log(filterElem);
+  filterElem.removeClass("enabled")
+      .addClass("disabled");
+  filterElem.appendTo("#sortable-filters");
+};
