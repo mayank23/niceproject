@@ -4,7 +4,7 @@ var STARTVIEW = 0;
 var MEDVIEW = 1;
 var ENDVIEW = 2;
 var currView = STARTVIEW;
-var map = $("#map-canvas").gmap3("get");
+var map;
 
 var showMapView = function() {
   console.log("showmapview is called");
@@ -28,6 +28,7 @@ var showMapView = function() {
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
   });
+    map  = $("#map-canvas").gmap3("get");
   $("#side-bar").tabs();
   currView = ENDVIEW;
 
