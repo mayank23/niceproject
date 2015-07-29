@@ -7,11 +7,8 @@
     </script src="../include/async.js"></script>
     <script>
         var propertyScores = [];
-        // initialize array
-        for(var i=0;i<100;i++)
-        {
-            propertyScores[i] = 0;
-        }
+        var finishedCount = 0;
+
         var properties;
         var olat = 33.4500;
         var olong = -112.0667;
@@ -21,28 +18,48 @@
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
                 console.log(properties);
+                
                 for(var i=0;i<properties.length;i++)
                 {
+                    // init property score object.
+                    propertyScores[i] = {propertyIndex: i, score: 0};
+                    // evaul property
                     evaluteRealEstate(properties[i], i);
                 }
             });
         });
+        // once all property scores have finished evaluating.
+        function onDataComplete()
+        {
+                propertyScores = propertyScores.sort(function(a,b){
+                    return b.score - a.score;
+                });
+        }
+
+        function checkAllFinished(count)
+        {
+            if(count === 3)
+            {
+                finishedCount++;
+                if(finishedCount === properties.length)
+                {
+                    onDataComplete();
+                }
+            }
+        }
 
         function evaluteRealEstate(realEstate, index){
             var count = 0;
             // non competitor scoring.
             getWalkScore(realEstate.address, 1, function(resultScore){
-                propertyScores[index] += resultScore;
+                propertyScores[index].score += resultScore;
                 count++;
-                if(count === 3)
-                {
- console.log(propertyScores);
- 
-                }
+                checkAllFinished(count);
             });
-         /*   getPriceScore(200000, getRealEstatePrice(realEstate.price,realEstate.size), function(resultScore){
-                propertyScores[index] += resultScore;
-            });*/
+            
+            getPriceScore(200000, realEstate.price , function(resultScore){
+                    propertyScores[index] += resultScore;
+            });
 
             // get competitors and async update score.
             $.ajax({
@@ -53,20 +70,15 @@
                  var results = data.results;
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, 2, function(resultScore){
-                    propertyScores[index]+=resultScore;
+                    propertyScores[index].score+=resultScore;
                     count++;
-                     if(count === 3)
-                     {
-                     console.log(propertyScores);
-                     }
+                    checkAllFinished(count);
                   });
+                 
                   getRestaurantScore(results, olat, olong, 3, function(resultScore){
-                    propertyScores[index]+=resultScore;
+                    propertyScores[index].score+=resultScore;
                     count++;
-                     if(count === 3){
-                        console.log(propertyScores);
-                     }
-                    
+                    checkAllFinished(count);
                     });
               }
             });
@@ -215,23 +227,22 @@
             $.ajax({
                 url: url,
                 dataType: 'json',
-                async: false,
                 success: function (data) {
                     walkscore = data.walkscore;
+                    if (walkscore > 80) {
+                        result =  4 * userRank;
+                    } else if (walkscore > 60) {
+                        result = 3 * userRank;
+                    } else if (walkscore > 40) {
+                        result = 2 * userRank;
+                    } else if (walkscore > 20) {
+                        result = 1 * userRank;
+                    } else {
+                        result =  0;
+                    }
+                    callback(result);
                 }
             });
-            if (walkscore > 80) {
-                result =  4 * userRank;
-            } else if (walkscore > 60) {
-                result = 3 * userRank;
-            } else if (walkscore > 40) {
-                result = 2 * userRank;
-            } else if (walkscore > 20) {
-                result = 1 * userRank;
-            } else {
-                result =  0;
-            }
-            callback(result);
         }
    
         function getPriceScore(maxPrice, curPrice, callback) {
