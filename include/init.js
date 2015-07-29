@@ -26,6 +26,7 @@ var showMapView = function() {
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
+    useUpdatedLocation(autocomplete.getPlace());
   });
   $("#side-bar").tabs();
   currView = ENDVIEW;
