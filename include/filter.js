@@ -118,16 +118,38 @@ $(function() {
   updatePopIndicator(2);
 });
 
+var reorderFilters = function() {
+  console.log("it's go time");
+  filter.price.priority = getPositionInRankings(".filter-price");
+  filter.competitors.priority = getPositionInRankings(".filter-competitors");
+  filter.providers.priority = getPositionInRankings(".filter-providers");
+  filter.wealth.priority = getPositionInRankings(".filter-income");
+  filter.walkscore.priority = getPositionInRankings(".filter-walkscore");
+  filter.age.priority = getPositionInRankings(".filter-age");
+  filter.population.priority = getPositionInRankings(".filter-population");
+  filter.distance.priority = getPositionInRankings(".filter-distance");
+
+  useUpdatedFilter();
+};
+
 var getPositionInRankings = function(filterName) {
+  if ($(filterName).hasClass("disabled"))
+    return 0;
   return 8 - $(filterName).index("#sortable-filters li");
 };
 
 var useUpdatedFilter = function() {
   console.log(filter);
   console.log(autocomplete.getPlace());
+  callUpdate()
 };
 
 var useUpdatedLocation = function(location) {
   console.log(location);
-  console.log(JSON.stringify(autocomplete.getPlace()));
-}
+  callUpdate();
+};
+
+var callUpdate = function() {
+  var loc = {address_components: autocomplete.getPlace().address_components,
+    geometry: autocomplete.getPlace().geometry};
+};

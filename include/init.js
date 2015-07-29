@@ -30,6 +30,22 @@ var showMapView = function() {
   });
   $("#side-bar").tabs();
   currView = ENDVIEW;
+
+  $(".disable-filter").click(function(){
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("enabled")
+        .addClass("disabled");
+    filterElem.appendTo("#sortable-filters");
+    reorderFilters();
+  });
+
+  $(".enable-filter").click(function() {
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("disabled")
+        .addClass("enabled");
+    filterElem.prependTo("#sortable-filters");
+    reorderFilters();
+  })
 };
 
 var recalcSize = function() {
@@ -48,6 +64,7 @@ $(document).ready(function() {
   autocomplete = new google.maps.places.Autocomplete(input);
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     mapLocation = autocomplete.getPlace().geometry.location;
+    useUpdatedLocation(autocomplete.getPlace());
     if (currView === STARTVIEW)
       showFilterView();
   });
@@ -56,6 +73,7 @@ $(document).ready(function() {
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
 
+  $("#sortable-filters").on("sortupdate", reorderFilters);
 });
 
 var showFilterView = function() {
