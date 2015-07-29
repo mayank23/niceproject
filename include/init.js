@@ -26,7 +26,6 @@ var showMapView = function() {
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
-    useUpdatedLocation(autocomplete.getPlace());
   });
   $("#side-bar").tabs();
   currView = ENDVIEW;
@@ -84,6 +83,7 @@ function addCompetitorsToMap(competitors) {
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
             },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: competitors[i].name
         });
     }
@@ -104,6 +104,7 @@ function addProvidersToMap(providers) {
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
             },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: providers[i].name
         });
     }
@@ -118,11 +119,12 @@ function addRealEstateToMap(locations) {
             draggable: false,
             opacity: 1.0,
             icon: {
-                url: '/css/img/restaurantprovidericon.png',
+                url: '/css/img/realestateicon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
             },
+            animation: google.maps.Animation.DROP,
             optimized: false,
             label: locations[i].propertyInfo.overview
         });
