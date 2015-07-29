@@ -12,9 +12,6 @@
 
       function callMapFunction() {
           addRealEstateToMap(propertyScores);
-          addCompetitorsToMap(competitors);
-          addProvidersToMap(providers);
-          fillTable(propertyScores);
       }
 
       function generateRecommended(lat, lng, filters)
@@ -47,13 +44,14 @@
             propertyScores = propertyScores.sort(function(a,b){
                 return b.rank - a.rank;
             });
-
+            fillTable(propertyScores);
 
             console.log(propertyScores);
         }
 
         function checkAllFinished(count)
         {
+
             if(count === totalFilters)
             {
                 finishedCount++;
@@ -70,25 +68,34 @@
             var zipcode = parseInt(address.substring(address.lastIndexOf(" ") + 1));
             // non competitor scoring.
             getWalkScore(realEstate.address, filters['walkscore'].priority, function(resultScore, maxScore){
-                propertyScores[index].score += resultScore;
-                propertyScores[index].maxScore += maxScore;
+                if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                    propertyScores[index].score += resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                }
+                count++;
+                    checkAllFinished(count);
+
+            });
+
+            getOriginDistanceScore(properties[index].lat, properties[index].lng, olat, olong, filters['distance'].val, filters['distance'].priority, function (resultScore, maxScore) {
+                if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                    propertyScores[index].score += resultScore;
+                    propertyScores[index].maxScore += maxScore;
+
+                }
                 count++;
                 checkAllFinished(count);
             });
 
-            getOriginDistanceScore(properties[index].lat, properties[index].lng, olat, olong, filters['distance'].val, filters['distance'].priority, function (resultScore, maxScore) {
-                propertyScores[index].score += resultScore;
-                propertyScores[index].maxScore += maxScore;
-                count++;
-                checkAllFinished(count);  
-            });
-
             
             getPriceScore(filters['price'].val[1], filters['price'].val[0], realEstate.price, filters['price'].priority, function (resultScore, maxScore) {
+                if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
                     propertyScores[index].score += resultScore;
                     propertyScores[index].maxScore += maxScore;
+
+                }
                     count++;
-                    checkAllFinished(count);  
+                    checkAllFinished(count);
             });
 
             // get competitors and async update score.
@@ -102,50 +109,56 @@
                   addCompetitorsToMap(results);
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, filters['competitors'].priority, function (resultScore, maxScore) {
-                    
-                    propertyScores[index].score+=resultScore;
-                    propertyScores[index].maxScore += maxScore;
+
+                      if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                          propertyScores[index].score += resultScore;
+                          propertyScores[index].maxScore += maxScore;
+
+                      }
                     count++;
                     checkAllFinished(count);
-                  
+
                   });
+
+                  getRestaurantProviderScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
+                      if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                          propertyScores[index].score += resultScore;
+                          propertyScores[index].maxScore += maxScore;
+
+                      }
+                    count++;
+                    checkAllFinished(count);
+                    });
               }
             });
 
-            $.ajax({
-                url: 'http://10.22.253.245/places?'+'query='+'restaurants suppliers ' + realEstate.address,
-                dataType: 'json',
-                success: function(data){
-                    // results are competitors.
-                    var results = data.results;
-                    providers = results;
 
-
-                    getRestaurantProviderScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
-                        propertyScores[index].score+=resultScore;
-                        propertyScores[index].maxScore += maxScore;
-                        count++;
-                        checkAllFinished(count);
-                    });
-                }
-            });
 
             gatherCensusData(zipcode, function(data) {
                 rankIncome(filters['wealth'].val, filters['wealth'].priority, data, function (resultScore, maxScore) {
-                    propertyScores[index].score+=resultScore;
-                    propertyScores[index].maxScore += maxScore;
+                    if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                        propertyScores[index].score += resultScore;
+                        propertyScores[index].maxScore += maxScore;
+
+                    }
                     count++;
                     checkAllFinished(count);
                 });
                 rankPopulation(filters['population'].val, filters['population'].priority, data, function (resultScore, maxScore) {
-                    propertyScores[index].score+=resultScore;
-                    propertyScores[index].maxScore += maxScore;
+                    if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                        propertyScores[index].score += resultScore;
+                        propertyScores[index].maxScore += maxScore;
+                        count++;
+                    }
                     count++;
                     checkAllFinished(count);
                 });
                 rankAgeRange(filters['age'].val, filters['age'].priority, data, function (resultScore, maxScore) {
-                    propertyScores[index].score+=resultScore;
-                    propertyScores[index].maxScore += maxScore;
+                    if(Number.isFinite(resultScore) && Number.isFinite(maxScore)) {
+                        propertyScores[index].score += resultScore;
+                        propertyScores[index].maxScore += maxScore;
+
+                    }
                     count++;
                     checkAllFinished(count);
                 });

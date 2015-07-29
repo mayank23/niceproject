@@ -1,5 +1,5 @@
 var filter = {
-  price: {val: [1000,5000], priority: 8},
+  price: {val: [], priority: 8},
   competitors: {priority: 7},
   providers: {priority: 6},
   wealth: {val: 2, priority: 5},
