@@ -57,10 +57,13 @@
                 count++;
                 checkAllFinished(count);
             });
+
+            /*
             
-            getPriceScore(200000, realEstate.price , function(resultScore){
-                    propertyScores[index] += resultScore;
+            getPriceScore(200000, realEstate.price , function(resultScore, maxScore){
+                    propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
             });
+            */  
 
             // get competitors and async update score.
             $.ajax({
@@ -70,14 +73,16 @@
                 // results are competitors.
                  var results = data.results;
                  // calculate scores based on competitors now.
-                  getCompetitorScore(results, olat, olong, 2, function(resultScore){
+                  getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
                     propertyScores[index].score+=resultScore;
+                    propertyScores[index].filterPercentages['competitor_score'] = (resultScore / maxScore) * 100;
                     count++;
                     checkAllFinished(count);
                   });
                  
-                  getRestaurantScore(results, olat, olong, 3, function(resultScore){
+                  getRestaurantScore(results, olat, olong, 3, function(resultScore, maxScore){
                     propertyScores[index].score+=resultScore;
+                    propertyScores[index].filterPercentages['restaurant_score'] = (resultScore / maxScore) * 100;
                     count++;
                     checkAllFinished(count);
                     });
@@ -247,7 +252,7 @@
         }
    
         function getPriceScore(maxPrice, curPrice, callback) {
-            return curPrice > maxPrice ? callback(0) : callback(4);
+            return curPrice > maxPrice ? callback(0,0) : callback(4,4);
         }
 
 
