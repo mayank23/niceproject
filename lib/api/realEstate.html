@@ -22,8 +22,8 @@
                 for(var i=0;i<properties.length;i++)
                 {
                     // init property score object.
-                    propertyScores[i] = {propertyIndex: i, score: 0, filterPercentages:[]};
-                    // eval property
+                    propertyScores[i] = {propertyIndex: i, score: 0};
+                    // evaul property
                     evaluteRealEstate(properties[i], i);
                 }
             });
@@ -34,7 +34,6 @@
                 propertyScores = propertyScores.sort(function(a,b){
                     return b.score - a.score;
                 });
-                console.log(propertyScores);
         }
 
         function checkAllFinished(count)
@@ -52,21 +51,15 @@
         function evaluteRealEstate(realEstate, index){
             var count = 0;
             // non competitor scoring.
-            getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
+            getWalkScore(realEstate.address, 1, function(resultScore){
                 propertyScores[index].score += resultScore;
-                propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
                 count++;
                 checkAllFinished(count);
             });
-
-            //getOriginDistanceScore(properties[i]., longitude, originLat, originLong, radius, userRank, callback)
-
-            /*
             
-            getPriceScore(200000, realEstate.price , function(resultScore, maxScore){
-                    propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
+            getPriceScore(200000, realEstate.price , function(resultScore){
+                    propertyScores[index] += resultScore;
             });
-            */  
 
             // get competitors and async update score.
             $.ajax({
@@ -76,16 +69,14 @@
                 // results are competitors.
                  var results = data.results;
                  // calculate scores based on competitors now.
-                  getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
+                  getCompetitorScore(results, olat, olong, 2, function(resultScore){
                     propertyScores[index].score+=resultScore;
-                    propertyScores[index].filterPercentages['competitor_score'] = (resultScore / maxScore) * 100;
                     count++;
                     checkAllFinished(count);
                   });
                  
-                  getRestaurantScore(results, olat, olong, 3, function(resultScore, maxScore){
+                  getRestaurantScore(results, olat, olong, 3, function(resultScore){
                     propertyScores[index].score+=resultScore;
-                    propertyScores[index].filterPercentages['restaurant_score'] = (resultScore / maxScore) * 100;
                     count++;
                     checkAllFinished(count);
                     });
@@ -249,14 +240,17 @@
                     } else {
                         result =  0;
                     }
-
-                    callback(result, 4*userRank);
+                    callback(result, 4* userRank);
                 }
             });
         }
-
-        function getPriceScore(maxPrice, curPrice, userRank, callback) {
-            return callback(curPrice > maxPrice ? callback(0) : callback(4), 4 * userRank);
+   
+        function getPriceScore(maxPrice, minPrice, curPrice, userRank, callback) {
+            var rank = 0;
+            if (curPrice >= minPrice && curPrice <= maxPrice) {
+                rank = 4;
+            }
+            return callback(rank * userRank, 4 * userRank);
         }
 
 
