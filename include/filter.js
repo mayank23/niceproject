@@ -24,7 +24,8 @@ $(function() {
       updateCostSlider(ui.values);
     }
   });
-  updateCostSlider([75, 300]);
+  $("#cost-slider-indicator").val("$" + 75 + " - $" + 300);
+  filter.price.val = [75, 300];
 
   var updateWealthIndicator = function(wealth) {
     var indicator;
@@ -55,7 +56,8 @@ $(function() {
       updateWealthIndicator(ui.value);
     }
   });
-  updateWealthIndicator(2);
+  filter.wealth.val = 2;
+  $("#wealth-indicator").html("Moderate wealth");
 
   var updateAgeIndicator = function(age) {
     var indicator;
@@ -85,7 +87,8 @@ $(function() {
       updateAgeIndicator(ui.value);
     }
   });
-  updateAgeIndicator(2);
+  filter.age.val = 2;
+  $("#age-indicator").html("33 - 42");
 
   var updatePopIndicator = function(age) {
     var indicator;
@@ -115,7 +118,8 @@ $(function() {
       updatePopIndicator(ui.value);
     }
   });
-  updatePopIndicator(2);
+  filter.age.val = 2;
+  $("#population-indicator").html("moderate population");
 });
 
 var reorderFilters = function() {
@@ -150,6 +154,7 @@ var useUpdatedLocation = function(location) {
 };
 
 var callUpdate = function() {
+  console.log("CALLING UPDATE THING THING");
   if (!autocomplete.getPlace()) { return; }
   deleteMarkers();
   var lat = autocomplete.getPlace().geometry.location.G;
