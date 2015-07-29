@@ -24,7 +24,7 @@ $(function() {
       updateCostSlider(ui.values);
     }
   });
-  $("#cost-slider-indicator").val("$" + 75 + " - $" + 300);
+  $("#cost-slider-indicator").val("$" + 75 + " - $" + 15000);
   filter.price.val = [75, 300];
 
   var updateWealthIndicator = function(wealth) {
