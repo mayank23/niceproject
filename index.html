@@ -22,13 +22,24 @@
 
   </head>
   <body class="startview">
-  
 
-  <div id="top-filters" class="top-filters">
-
-      blah blah blah we'll make the map invisible for the first screen state and this will be bigger but proof of concept for loading map
+  <nav class="navbar navbar-default" id="start">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        <img alt="Brand" src="...">
+      </a>
+    </div>
+    <div id="location-search">
+      <form class="navbar-form navbar-left" role="search" id="searchbox-large" style="margin-left:10%">
+        <input type="search" placeholder="Search..." id="searching-large">
+        <button id="search-submit-large" type="submit"></button>
+      </form>
+    </div>
 
   </div>
+</nav>
+    <a href="#" id="go-to-mapview">go</a>
     <div id="content-container" style= "z-index:1000">
       <div id="side-bar" class="side-bar">
         <ul id="side-bar-tabs" class="side-bar-tabs">
@@ -36,21 +47,54 @@
           <li><a href="#results">Results</a></li>
         </ul>
         <div id="filters" class="filters">
-          <div class="filter-container">
-            <p>
-              <label for="cost-slider-indicator">Only show me properties in this range of prices:</label>
-              <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
-            <div id="cost-slider"></div>
-          </div>
-          <div class="filter-container">
-            <p>
-              Favor neighborhoods with 
-              <label id="wealth-indicator" for="wealth-slider">Moderate affluency</label>
-            </p>
-            <div id="wealth-slider"></div>
-          </div>
-          <a href="#" id="go-to-mapview">go</a>
+          <ul id="sortable-filters">
+            <li class="ui-state-default">
+              <div class="filter-container filter-property-value filter-enabled">
+                <p>
+                  <label for="cost-slider-indicator">Only show me properties in this range of prices:</label>
+                  <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                </p>
+                <div id="cost-slider"></div>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-wealth filter-enabled">
+                <p>
+                  Favor neighborhoods with
+                  <label id="wealth-indicator" for="wealth-slider">Moderate affluency</label>
+                </p>
+                <div id="wealth-slider"></div>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-accessibility filter-enabled">
+                <p>
+                  Favor locations that are very accessible by foot, car, and bicycle.
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-competition filter-enabled">
+                <p>
+                  Favor locations that are far away from other restaurants
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-population filter-enabled">
+                <p>
+                  Favor locations with high populations
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-crime filter-enabled">
+                <p>
+                  Favor locations less history of crime
+                </p>
+              </div>
+            </li>
+          </ul>
           <div class="spacer" style="clear: both"></div>
         </div>
         <div id="results" class="results">
@@ -61,12 +105,7 @@
     </div>
 
     <div class="container">
-    <div id="location-search">
-      <form id="searchbox">
-        <input type="search" placeholder="Search..." id="searching">
-        <button id="search-submit" type="submit"></button>
-      </form>
-    </div>
+   
     </div>
   </body>
 </html>

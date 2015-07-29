@@ -1,6 +1,7 @@
 .filter-container {
   border: 1px solid black;
   padding: 10px;
+  width: 100%;
 }
 
 .startview .side-bar  .filter-container {
@@ -13,4 +14,12 @@
 
 .mapview .side-bar .filter-container {
   width: 200px;
+}
+
+.filter-enabled {
+  background: green;
+}
+
+.filter-disabled {
+  background: grey;
 }
