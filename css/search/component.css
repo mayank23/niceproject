@@ -127,7 +127,7 @@ input[type="search"] { /* reset normalize */
 	background: transparent url(../img/magnifier.svg) no-repeat center center;
 	background-size: 100%;
 	border: none;
-	pointer-events: none;
+	
 	transform-origin: 50% 50%;
 	opacity: 0;
 	-webkit-transform: translate3d(-30px,-50%,0) scale3d(0,0,1);

@@ -19,6 +19,9 @@ var recalcSize = function() {
 };
 
 $(document).ready(function() {
+  var input = (document.getElementById('searching'));
+  console.log(input);
+  var autocomplete = new google.maps.places.Autocomplete(input);
   $("#go-to-mapview").click(showMapView);
 });
 
