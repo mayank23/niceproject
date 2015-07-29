@@ -22,7 +22,7 @@ $(function() {
     min: 0,
     max: 500,
     values: [75, 300],
-    slide: function(event, ui) {
+    stop: function(event, ui) {
       updateCostSlider(ui.values);
     }
   });
