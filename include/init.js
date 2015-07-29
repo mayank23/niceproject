@@ -142,6 +142,7 @@ function addRealEstateToMap(locations) {
             },
             animation: google.maps.Animation.DROP,
         });
+        
         markers.push(marker);
     }
 }
