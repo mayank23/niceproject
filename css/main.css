@@ -214,17 +214,18 @@ html, body {
 
 #search-submit-large{
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   overflow: hidden;
   right: 10%;
   top: 23%;
-  background: transparent url(img/magnifier.svg) no-repeat center center;
+  background: transparent url(img/rightarrow.png) no-repeat center center;
   background-size: 100%;
   border: none;
   transform-origin: 50% 50%;
   opacity: .7;
   z-index:1000;
+  outline:none;
   
 }
 
@@ -240,12 +241,13 @@ html, body {
   overflow: hidden;
   right: 10%;
   top: 10%;
-  background: transparent url(img/magnifier.svg) no-repeat center center;
+  background: transparent url(img/rightarrow.png) no-repeat center center;
   background-size: 100%;
   border: none;
   transform-origin: 50% 50%;
   opacity: .7;
   z-index:1000;
+  outline:none;
   
 }
 
@@ -434,14 +436,14 @@ html, body {
 
 .ac-custom {
   padding: 0 3em;
-  max-width: 900px;
+  
   margin: 0 auto;
 }
 
 .ac-custom h2 {
-  font-size: 3em;
+  font-size: 5em;
   font-weight: 300;
-  padding: 0 0 0.5em;
+  padding: .5em 0 0.5em;
   margin: 0 0 30px;
 }
 
@@ -450,7 +452,7 @@ html, body {
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  max-width: 800px;
+  
 }
 
 .ac-custom li {
