@@ -4,6 +4,7 @@ var STARTVIEW = 0;
 var MEDVIEW = 1;
 var ENDVIEW = 2;
 var currView = STARTVIEW;
+var map = $("#map-canvas").gmap3("get");
 
 var showMapView = function() {
   console.log("showmapview is called");
@@ -80,6 +81,46 @@ var showFilterView = function() {
   currView = MEDVIEW;
   return false;
 };
+
+function addCompetitorsToMap(competitors) {
+    for (var i = 0; i < competitors; i++) {
+        var latlng = new google.maps.LatLng(competitors[i].geometry.location.lat, competitors[i].geometry.location.lng);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            draggable: false,
+            opacity: 1.0,
+            /*icon: {
+                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+                anchor: new google.maps.Point(3, 28),
+                //size of push pin
+                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
+            },*/
+            optimized: false,
+            label: competitors[i].name
+        });
+    }
+}
+
+function addProvidersToMap(providers) {
+    for (var i = 0; i < addCompetitorsToMap; i++) {
+        var latlng = new google.maps.LatLng(providers[i].geometry.location.lat, providers[i].geometry.location.lng);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            draggable: false,
+            opacity: 1.0,
+            /*icon: {
+                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+                anchor: new google.maps.Point(3, 28),
+                //size of push pin
+                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
+            },*/
+            optimized: false,
+            label: providers[i].name
+        });
+    }
+}
 
 $(window).resize(recalcSize);
 
