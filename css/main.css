@@ -2,13 +2,13 @@
   background: #909090;
 }
 
-.top-filters-startview {
+.startview .top-filters {
   height: 100px;
   width: 100%;
   z-index: 1000;
 }
 
-.top-filters-mapview {
+.mapview .top-filters {
   width: 100%;
   height: 50px;
 }
@@ -17,27 +17,28 @@
   background: #9A9A9A;
 }
 
-.side-bar-startview {
+.startview .side-bar {
   height: 100%;
   width: 100%;
   z-index:1000;
 }
 
-.side-bar-mapview {
+.mapview .side-bar {
   height: 100%;
-  width: 200px;
+  width: 240px;
   float: right;
+  padding: 0;
 }
 
 #side-bar-tabs {
   float: none;
 }
 
-.side-bar-tabs-startview {
+.startview .side-bar-tabs {
   display: none;
 }
 
-.results-startview {
+.startview .results {
   display: none;
 }
 
