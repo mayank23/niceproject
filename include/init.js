@@ -12,7 +12,7 @@ var showMapView = function() {
   $('#search-submit-mid').attr('id','search-submit-small');
   $('#searchbox-mid').attr('id','searchbox-small');
   $('#mid').attr('id','finish');
-
+    $('#filter-div').height("0px");
 
 
   $("body").removeClass("medview")
