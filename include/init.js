@@ -39,6 +39,7 @@ var showFilterView = function() {
   $('#search-submit-large').attr('id','search-submit-mid');
   $('#searchbox-large').attr('id','searchbox-mid');
   $('#start').attr('id','mid');
-  console.log("called");
+  console.log("called or not");
+  return false;
 };
 $(window).resize(recalcSize);
