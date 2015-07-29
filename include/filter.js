@@ -19,13 +19,13 @@ $(function() {
     range: true,
     min: 0,
     max: 15000,
-    values: [75, 300],
+    values: [75, 15000],
     stop: function(event, ui) {
       updateCostSlider(ui.values);
     }
   });
   $("#cost-slider-indicator").val("$" + 75 + " - $" + 300);
-  filter.price.val = [75, 300];
+  filter.price.val = [75, 15000];
 
   var updateWealthIndicator = function(wealth) {
     var indicator;
