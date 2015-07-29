@@ -7,8 +7,7 @@
       var properties;
       var olat = 33.4500;
       var olong = -112.0667;
-      function generateRecommended(address, filters)
-      {
+      function generateRecommended(address, filters){
            // get all open real estate.
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
