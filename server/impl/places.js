@@ -12,7 +12,8 @@ module.exports = function(req, res, next){
     {
       console.log(error);
     }else{
-     res.setHeader('Content-Type', 'application/json');
+     
+     res.setHeader('Content-Type', 'text/plain');
      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:52096');
      res.send(body);
     }
