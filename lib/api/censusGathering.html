@@ -22,19 +22,98 @@
                     "population_asian_alone",
                     "population_hispanic_origin",
                     "income_per_capita",
-                    "age",
-                    "median_home_value"
+                    "age"
                 ]}
 
                 censusModule.APIRequest(request, function (response) {
-                        return response.data[0];
+                        test = response.data[0];
                     });
         }
-/*
-        function myFunctionRocks(data) {
-            console.log(data);
+
+        function rankIncome(userRankingPreference, importance) {
+            var trueIncome = test.income_per_capita;
+            var rank;
+
+            if (trueIncome <=  12000) {
+                rank = 0;
+            }
+            else if (trueIncome <= 30000 && trueIncome > 12000) {
+                rank = 1;
+            }
+            else if (trueIncome <= 55000 && trueIncome > 30000) {
+                rank = 2;
+            }
+            else if (trueIncome <= 80000 && trueIncome > 55000) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            return (finalRank * importance);
         }
-*/
+
+        function rankPopulation(userRankingPreference, importance) {
+            var truePopulation = test.population;
+            var rank;
+
+            if (truePopulation <=  2000) {
+                rank = 0;
+            }
+            else if (truePopulation <= 3000 && truePopulation > 2000) {
+                rank = 1;
+            }
+            else if (truePopulation <= 4500 && truePopulation > 3000) {
+                rank = 2;
+            }
+            else if (truePopulation < 5500 && truePopulation > 4500) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            return (finalRank * importance);
+        }
+
+        function rankAgeRange(userRankingPreference, importance) {
+            var trueAgeRange = test.age;
+            var rank;
+
+            if (trueAgeRange <=  25) {
+                rank = 0;
+            }
+            else if (trueAgeRange < 33 && trueAgeRange > 25) {
+                rank = 1;
+            }
+            else if (trueAgeRange < 43 && trueAgeRange >= 33) {
+                rank = 2;
+            }
+            else if (trueAgeRange <= 43 && trueAgeRange >= 55) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            return (finalRank * importance);
+        }
+
+        var test;
+        gatherCensusData(93063);
+        setTimeout(function () {
+            rankIncome(4, 5))
+        }, 5000);
+        setTimeout(function() {
+            rankPopulation(3, 3))
+        }, 5000);
+        setTimeout(function() {
+            rankAgeRange(2, 1))
+        }, 5000);
+
     </script>
 
 </head>
