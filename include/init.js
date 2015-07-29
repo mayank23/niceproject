@@ -5,6 +5,8 @@ var MEDVIEW = 1;
 var ENDVIEW = 2;
 var currView = STARTVIEW;
 var map;
+var markers = [];
+
 
 var showMapView = function() {
   console.log("showmapview is called");
@@ -104,6 +106,7 @@ function addCompetitorsToMap(competitors) {
             },
             animation: google.maps.Animation.DROP,
         });
+        markers.push(marker);
     }
 }
 
@@ -120,6 +123,7 @@ function addProvidersToMap(providers) {
             },
             animation: google.maps.Animation.DROP,
         });
+        markers.push(marker);
     }
 }
 
@@ -135,7 +139,15 @@ function addRealEstateToMap(locations) {
             },
             animation: google.maps.Animation.DROP,
         });
+        markers.push(marker);
     }
+}
+
+function deleteMarkers() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = [];
 }
 
 //delete table data, keep headers
