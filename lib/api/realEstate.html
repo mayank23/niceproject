@@ -4,11 +4,13 @@
 </head>
 <body>
     <script src="../../include/jquery-2.1.4.min.js"></script>
-    </script src="../../include/async.js"></script>
+    <script src="../../include/async.js"></script>
+    <script src="../../include/citysdk.js" type="text/javascript"></script>
+    <script src="../../include/citysdk.census.js" text="text/javascript"></script>
     <script>
         var propertyScores = [];
         var finishedCount = 0;
-        var totalFilters = 4;
+        var totalFilters = 8;
         var properties;
         var olat = 33.4500;
         var olong = -112.0667;
@@ -37,8 +39,9 @@
                 }
 
                 propertyScores = propertyScores.sort(function(a,b){
-                    return b.score - a.score;
+                    return b.rank - a.rank;
                 });
+                console.log(propertyScores);
         }
 
         function checkAllFinished(count)
@@ -56,7 +59,7 @@
         function evaluteRealEstate(realEstate, index){
             var count = 0;
             // non competitor scoring.
-            getWalkScore(realEstate.address, 1, function(resultScore){
+            getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
                 propertyScores[index].maxScore += maxScore;
                 count++;
@@ -71,7 +74,7 @@
             });
 
             
-            getPriceScore(200000, realEstate.price, 2, function(resultScore, maxScore){
+            getPriceScore(200000, 15000, realEstate.price, 2, function(resultScore, maxScore){
                     propertyScores[index].score += resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
@@ -86,7 +89,7 @@
                 // results are competitors.
                  var results = data.results;
                  // calculate scores based on competitors now.
-                  getCompetitorScore(results, olat, olong, 2, function(resultScore){
+                  getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
                     
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
@@ -95,7 +98,7 @@
                   
                   });
                  
-                  getRestaurantScore(results, olat, olong, 3, function(resultScore){
+                  getRestaurantScore(results, olat, olong, 3, function(resultScore, maxScore){
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
@@ -103,6 +106,29 @@
                     });
               }
             });
+
+            gatherCensusData(93063, function(data) {
+                rankIncome(4, 5, data, function(resultScore, maxScore) { 
+                    propertyScores[index].score+=resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);
+                });
+                rankPopulation(3, 3, data, function(resultScore, maxScore) {
+                    propertyScores[index].score+=resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);
+                });
+                rankAgeRange(2, 1, data, function(resultScore, maxScore) {
+                    propertyScores[index].score+=resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);
+                });
+            });
+
+
         }
 
         function getOpenRealEstate(latitude, longitude, miles, callback) {
@@ -274,6 +300,101 @@
             return callback(rank * userRank, 4 * userRank);
         }
 
+        var sdk = new CitySDK();
+        var censusModule = sdk.modules.census;
+
+        censusModule.enable("c1b2930d3ce73910373c35fe2a4bddae76fd3492");
+
+        function gatherCensusData(zipCode, callback) {
+            var request = {
+                "level": "tract",
+                "zip": zipCode,
+                "variables": [
+                    "population",
+                    "population_white_alone",
+                    "population_black_alone",
+                    "population_asian_alone",
+                    "population_hispanic_origin",
+                    "income_per_capita",
+                    "age"
+                ]}
+
+                censusModule.APIRequest(request, function (response) {
+                        callback(response.data[0]);
+                    });
+        }
+
+        function rankIncome(userRankingPreference, importance, data, callback) {
+            var trueIncome = data.income_per_capita;
+            var rank;
+
+            if (trueIncome <=  12000) {
+                rank = 0;
+            }
+            else if (trueIncome <= 30000 && trueIncome > 12000) {
+                rank = 1;
+            }
+            else if (trueIncome <= 55000 && trueIncome > 30000) {
+                rank = 2;
+            }
+            else if (trueIncome <= 80000 && trueIncome > 55000) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            callback(finalRank * importance, 4* userRankingPreference);
+        }
+
+        function rankPopulation(userRankingPreference, importance, data, callback) {
+            var truePopulation = data.population;
+            var rank;
+
+            if (truePopulation <=  2000) {
+                rank = 0;
+            }
+            else if (truePopulation <= 3000 && truePopulation > 2000) {
+                rank = 1;
+            }
+            else if (truePopulation <= 4500 && truePopulation > 3000) {
+                rank = 2;
+            }
+            else if (truePopulation < 5500 && truePopulation > 4500) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            callback(finalRank * importance, 4*userRankingPreference);
+        }
+
+        function rankAgeRange(userRankingPreference, importance, data, callback) {
+            var trueAgeRange = data.age;
+            var rank;
+
+            if (trueAgeRange <=  25) {
+                rank = 0;
+            }
+            else if (trueAgeRange < 33 && trueAgeRange > 25) {
+                rank = 1;
+            }
+            else if (trueAgeRange < 43 && trueAgeRange >= 33) {
+                rank = 2;
+            }
+            else if (trueAgeRange <= 43 && trueAgeRange >= 55) {
+                rank = 3;
+            }
+            else {
+                rank = 4;
+            }
+
+            var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
+            callback(finalRank * importance, 4*userRankingPreference);
+        }
 
     
     </script>
