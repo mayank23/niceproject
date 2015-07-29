@@ -122,5 +122,47 @@ function addProvidersToMap(providers) {
     }
 }
 
+function addRealEstateToMap(locations) {
+    for (var i = 0; i < addCompetitorsToMap; i++) {
+        var latlng = new google.maps.LatLng(locations[i].propertyInfo.lat, locations[i].propertyInfo.lng);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            draggable: false,
+            opacity: 1.0,
+            /*icon: {
+                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+                anchor: new google.maps.Point(3, 28),
+                //size of push pin
+                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
+            },*/
+            optimized: false,
+            label: locations[i].propertyInfo.overview
+        });
+    }
+}
+
+//delete table data, keep headers
+function deleteTable() {
+    $("tbody").children().remove();
+    var table = document.getElementById("resultsTable");
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    cell1.innerHTML = "Rank";
+    cell2.innerHTML = "Details";
+}
+
+function fillTable(results) {
+    deleteTable();
+    var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
+    for (var i = 0; i < results.length; i++) {
+        html += '<tr><td>' + (parseInt(results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+    }
+
+    $('#resultsTable tr').first(html).after(html);
+    $('#resultsTable tr:first').remove();
+}
+
 $(window).resize(recalcSize);
 
