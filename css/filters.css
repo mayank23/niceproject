@@ -3,7 +3,7 @@
   padding: 10px;
 }
 
-.side-bar-startview  .filter-container {
+.startview .side-bar  .filter-container {
   width: 300px;
   min-height: 150px;
   display: inline-block;
@@ -11,6 +11,6 @@
   margin: 10px;
 }
 
-.side-bar-mapview .filter-container {
+.mapview .side-bar .filter-container {
   width: 200px;
 }
