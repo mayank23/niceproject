@@ -1,5 +1,10 @@
 var showMapView = function() {
-  console.log("called");
+  console.log("showmapview is called");
+  $('#searching-mid').attr('id','searching-small');
+  $('#search-submit-mid').attr('id','search-submit-small');
+  $('#searchbox-mid').attr('id','searchbox-small');
+  $('#mid').attr('id','finish');
+
 
   $("body").removeClass("startview")
     .addClass("mapview");
@@ -19,12 +24,21 @@ var recalcSize = function() {
 };
 
 $(document).ready(function() {
-  var input = (document.getElementById('searching-small'));
+  var input = (document.getElementById('searching-large'));
   console.log(input);
   var autocomplete = new google.maps.places.Autocomplete(input);
   $("#go-to-mapview").click(showMapView);
   $("#sortable-filters").sortable();
   $("#sortable-filters").disableSelection();
+  $("#search-submit-large").click(showFilterView);
 });
 
+var showFilterView = function() {
+
+  $('#searching-large').attr('id','searching-mid');
+  $('#search-submit-large').attr('id','search-submit-mid');
+  $('#searchbox-large').attr('id','searchbox-mid');
+  $('#start').attr('id','mid');
+  console.log("called");
+};
 $(window).resize(recalcSize);

@@ -27,6 +27,17 @@ html, body {
   z-index:1000;*/
   display: none;
 }
+#start {
+  height:100%;
+}
+#mid{
+  height:30%;
+  transition:1.5s;
+}
+#finish {
+  height:50px;
+  transition:1.5s;
+}
 
 .mapview .side-bar {
   height: 100%;
@@ -70,7 +81,7 @@ html, body {
   width: 80%;
   height: 180px;
   z-index: 500;
-  top:-35px;
+  top:25%;
   -webkit-transform: translate3d(0,3em,0);
   transform: translate3d(0,3em,0);
   position: absolute;
@@ -80,6 +91,7 @@ html, body {
   transition-duration: 0.5s;
   -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
   transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+
 }
 
 #searchbox-mid {
@@ -96,21 +108,16 @@ html, body {
   transition-duration: 0.5s;
   -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
   transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  transition:1s;
 }
 #searchbox-small {
   width: 80%;
   height: 50%;
   z-index: 500;
-  top:-35px;
-  -webkit-transform: translate3d(0,3em,0);
-  transform: translate3d(0,3em,0);
+
+  
   position: absolute;
-  -webkit-transition-property: width, height, -webkit-transform;
-  transition-property: width, height, transform;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
-  transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  
 }
 
 #searching-large{
@@ -137,6 +144,7 @@ html, body {
   box-sizing: content-box;
   font-family: 'Raleway', Arial, sans-serif;
   z-index:500;
+  transition:1s;
 
 }
 
@@ -151,6 +159,7 @@ html, body {
   box-sizing: content-box;
   font-family: 'Raleway', Arial, sans-serif;
   z-index:500;
+  transition:1s;
 
 }
 
