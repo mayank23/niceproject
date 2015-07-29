@@ -32,6 +32,10 @@
   background-color: green;
 }
 
+.enabled {
+  background-color: #fff;
+}
+
 .disabled .disable-filter {
   display: none;
 }
