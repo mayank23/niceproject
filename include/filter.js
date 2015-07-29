@@ -1,5 +1,5 @@
 var filter = {
-  price: {val: [], priority: 8},
+  price: {val: [1000,5000], priority: 8},
   competitors: {priority: 7},
   providers: {priority: 6},
   wealth: {val: 2, priority: 5},
@@ -150,5 +150,9 @@ var useUpdatedLocation = function(location) {
 };
 
 var callUpdate = function() {
-  generateRecommended(autocomplete.getPlace(), filter);
+  if (!autocomplete.getPlace()) { return; }
+
+  var lat = autocomplete.getPlace().geometry.location.G;
+  var lng = autocomplete.getPlace().geometry.location.K;
+  generateRecommended(lat, lng, filter);
 };

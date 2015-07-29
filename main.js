@@ -7,12 +7,21 @@
       var properties;
       var olat;
       var olong;
+      var competitors;
+      var providers;
 
-      function generateRecommended(address, filters)
+      function callMapFunction() {
+          addRealEstateToMap(propertyScores);
+          addCompetitorsToMap(competitors);
+          addProvidersToMap(providers);
+          fillTable(propertyScores);
+      }
+
+      function generateRecommended(lat, lng, filters)
       {
            // get all open real estate.
-           olat = address.geometry.location.G;
-           olong = address.geometry.location.K;
+           olat = lat;
+           olong = lng;
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
                 
@@ -28,7 +37,7 @@
 
  // once all property scores have finished evaluating.
         function onDataComplete() {
-            addRealEstateToMap(propertyScores);
+
            // calculate percentage matches.
             for(var i=0;i<propertyScores.length;i++)
             {
@@ -38,7 +47,8 @@
             propertyScores = propertyScores.sort(function(a,b){
                 return b.rank - a.rank;
             });
-            fillTable(propertyScores); 
+
+
             console.log(propertyScores);
         }
 
@@ -88,6 +98,7 @@
               success: function(data){
                 // results are competitors.
                   var results = data.results;
+                  competitors = results;
                   addCompetitorsToMap(results);
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, filters['competitors'].priority, function (resultScore, maxScore) {
@@ -98,14 +109,25 @@
                     checkAllFinished(count);
                   
                   });
-                 
-                  getRestaurantProviderScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
-                    propertyScores[index].score+=resultScore;
-                    propertyScores[index].maxScore += maxScore;
-                    count++;
-                    checkAllFinished(count);
-                    });
               }
+            });
+
+            $.ajax({
+                url: 'http://10.22.253.245/places?'+'query='+'restaurants suppliers ' + realEstate.address,
+                dataType: 'json',
+                success: function(data){
+                    // results are competitors.
+                    var results = data.results;
+                    providers = results;
+
+
+                    getRestaurantProviderScore(results, olat, olong, filters['providers'].priority, function (resultScore, maxScore) {
+                        propertyScores[index].score+=resultScore;
+                        propertyScores[index].maxScore += maxScore;
+                        count++;
+                        checkAllFinished(count);
+                    });
+                }
             });
 
             gatherCensusData(zipcode, function(data) {

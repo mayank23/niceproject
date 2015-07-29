@@ -47,6 +47,7 @@ var showMapView = function() {
     filterElem.prependTo("#sortable-filters");
     reorderFilters();
   })
+    callMapFunction();
 };
 
 var recalcSize = function() {
@@ -91,7 +92,7 @@ var showFilterView = function() {
 };
 
 function addCompetitorsToMap(competitors) {
-    for (var i = 0; i < competitors; i++) {
+    for (var i = 0; i < competitors.length; i++) {
         var latlng = new google.maps.LatLng(competitors[i].geometry.location.lat, competitors[i].geometry.location.lng);
         var marker = new google.maps.Marker({
             position: latlng,
@@ -100,19 +101,14 @@ function addCompetitorsToMap(competitors) {
             opacity: 1.0,
             icon: {
                 url: '/css/img/competitoricon.png',
-                anchor: new google.maps.Point(3, 28),
-                //size of push pin
-                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
             },
-            optimized: false,
             animation: google.maps.Animation.DROP,
-            label: competitors[i].name
         });
     }
 }
 
 function addProvidersToMap(providers) {
-    for (var i = 0; i < addCompetitorsToMap; i++) {
+    for (var i = 0; i < providers.length; i++) {
         var latlng = new google.maps.LatLng(providers[i].geometry.location.lat, providers[i].geometry.location.lng);
         var marker = new google.maps.Marker({
             position: latlng,
@@ -120,35 +116,24 @@ function addProvidersToMap(providers) {
             draggable: false,
             opacity: 1.0,
             icon: {
-                url: '/css/img/restaurantprovidericon.png',
-                anchor: new google.maps.Point(3, 28),
-                //size of push pin
-                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
+                url: '/css/img/restaurantprovidericon.png'
             },
-            optimized: false,
             animation: google.maps.Animation.DROP,
-            label: providers[i].name
         });
     }
 }
 
 function addRealEstateToMap(locations) {
-    for (var i = 0; i < addCompetitorsToMap; i++) {
+    for (var i = 0; i < locations.length; i++) {
         var latlng = new google.maps.LatLng(locations[i].propertyInfo.lat, locations[i].propertyInfo.lng);
         var marker = new google.maps.Marker({
             position: latlng,
             map: map,
             draggable: false,
-            opacity: 1.0,
             icon: {
-                url: '/css/img/realestateicon.png',
-                anchor: new google.maps.Point(3, 28),
-                //size of push pin
-                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
+                url: '/css/img/realestateicon.png'
             },
             animation: google.maps.Animation.DROP,
-            optimized: false,
-            label: locations[i].propertyInfo.overview
         });
     }
 }
