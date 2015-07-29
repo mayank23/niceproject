@@ -11,7 +11,11 @@
 
 
     <script type="text/javaScript">
-      googlePlaces.placesNearAddr('1125 goldfinch lane, antioch, il, 60002');
+      googlePlaces.placesNearAddr('restaurants near tempe, az', function(data){
+
+        console.log(data.results);
+        
+      });
     </script>
   </body>
 </html>
