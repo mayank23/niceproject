@@ -53,6 +53,20 @@ $(document).ready(function() {
   $("#sortable-filters").sortable();
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
+
+  $("#sortable-filters").on("sortupdate", function() {
+    console.log("it's go time");
+    filter.price.priority = getPositionInRankings(".filter-price");
+    filter.competitors.priority = getPositionInRankings(".filter-competitors");
+    filter.providers.priority = getPositionInRankings(".filter-providers");
+    filter.wealth.priority = getPositionInRankings(".filter-income");
+    filter.walkscore.priority = getPositionInRankings(".filter-walkscore");
+    filter.age.priority = getPositionInRankings(".filter-age");
+    filter.population.priority = getPositionInRankings(".filter-population");
+    filter.distance.priority = getPositionInRankings(".filter-distance");
+
+    useUpdatedFilter();
+  });
 });
 
 var showFilterView = function() {
@@ -68,3 +82,4 @@ var showFilterView = function() {
 };
 
 $(window).resize(recalcSize);
+
