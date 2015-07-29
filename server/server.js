@@ -19,7 +19,3 @@ server.listen(80,function(){
 server.get('/places', places);
 server.get('/catylist', catylist);
 server.get('/walkscore', walkscore);
-
-
-
-

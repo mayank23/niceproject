@@ -22,7 +22,6 @@
 
   </head>
   <body class="startview">
-  
 
   <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -37,9 +36,10 @@
         <button id="search-submit-small" type="submit"></button>
       </form>
     </div>
+
   </div>
 </nav>
-</nav>
+    <a href="#" id="go-to-mapview">go</a>
     <div id="content-container" style= "z-index:1000">
       <div id="side-bar" class="side-bar">
         <ul id="side-bar-tabs" class="side-bar-tabs">
@@ -47,21 +47,54 @@
           <li><a href="#results">Results</a></li>
         </ul>
         <div id="filters" class="filters">
-          <div class="filter-container">
-            <p>
-              <label for="cost-slider-indicator">Only show me properties in this range of prices:</label>
-              <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
-            <div id="cost-slider"></div>
-          </div>
-          <div class="filter-container">
-            <p>
-              Favor neighborhoods with 
-              <label id="wealth-indicator" for="wealth-slider">Moderate affluency</label>
-            </p>
-            <div id="wealth-slider"></div>
-          </div>
-          <a href="#" id="go-to-mapview">go</a>
+          <ul id="sortable-filters">
+            <li class="ui-state-default">
+              <div class="filter-container filter-property-value filter-enabled">
+                <p>
+                  <label for="cost-slider-indicator">Only show me properties in this range of prices:</label>
+                  <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                </p>
+                <div id="cost-slider"></div>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-wealth filter-enabled">
+                <p>
+                  Favor neighborhoods with
+                  <label id="wealth-indicator" for="wealth-slider">Moderate affluency</label>
+                </p>
+                <div id="wealth-slider"></div>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-accessibility filter-enabled">
+                <p>
+                  Favor locations that are very accessible by foot, car, and bicycle.
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-competition filter-enabled">
+                <p>
+                  Favor locations that are far away from other restaurants
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-population filter-enabled">
+                <p>
+                  Favor locations with high populations
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-crime filter-enabled">
+                <p>
+                  Favor locations less history of crime
+                </p>
+              </div>
+            </li>
+          </ul>
           <div class="spacer" style="clear: both"></div>
         </div>
         <div id="results" class="results">

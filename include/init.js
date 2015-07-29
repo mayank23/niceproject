@@ -23,6 +23,8 @@ $(document).ready(function() {
   console.log(input);
   var autocomplete = new google.maps.places.Autocomplete(input);
   $("#go-to-mapview").click(showMapView);
+  $("#sortable-filters").sortable();
+  $("#sortable-filters").disableSelection();
 });
 
 $(window).resize(recalcSize);
