@@ -14,6 +14,10 @@
         var properties;
         var olat = 33.4500;
         var olong = -112.0667;
+        var sdk = new CitySDK();
+        var censusModule = sdk.modules.census;
+
+        censusModule.enable("c1b2930d3ce73910373c35fe2a4bddae76fd3492");
 
         $(document).ready(function() {
             // get all open real estate.
@@ -58,6 +62,8 @@
 
         function evaluteRealEstate(realEstate, index){
             var count = 0;
+            var address = realEstate.propertyInfo.address;
+            var zipcode = address.substring(address.lastIndexOf(" ") + 1);
             // non competitor scoring.
             getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
@@ -107,7 +113,7 @@
               }
             });
 
-            gatherCensusData(93063, function(data) {
+            gatherCensusData(zipcode, function(data) {
                 rankIncome(4, 5, data, function(resultScore, maxScore) { 
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
@@ -299,11 +305,6 @@
             }
             return callback(rank * userRank, 4 * userRank);
         }
-
-        var sdk = new CitySDK();
-        var censusModule = sdk.modules.census;
-
-        censusModule.enable("c1b2930d3ce73910373c35fe2a4bddae76fd3492");
 
         function gatherCensusData(zipCode, callback) {
             var request = {
