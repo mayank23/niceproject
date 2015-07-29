@@ -125,3 +125,7 @@ var getPositionInRankings = function(filterName) {
 var useUpdatedFilter = function() {
   console.log(filter);
 };
+
+var useUpdatedLocation = function(location) {
+  console.log(location);
+}
