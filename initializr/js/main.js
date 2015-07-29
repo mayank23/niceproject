@@ -50,8 +50,10 @@
             }
         }
 
-        function evaluteRealEstate(realEstate, index){
+       function evaluteRealEstate(realEstate, index){
             var count = 0;
+            var address = realEstate.propertyInfo.address;
+            var zipcode = address.substring(address.lastIndexOf(" ") + 1);
             // non competitor scoring.
             getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
@@ -101,7 +103,7 @@
               }
             });
 
-            gatherCensusData(93063, function(data) {
+            gatherCensusData(zipcode, function(data) {
                 rankIncome(4, 5, data, function(resultScore, maxScore) { 
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
@@ -124,6 +126,7 @@
 
 
         }
+
 
         function getOpenRealEstate(latitude, longitude, miles, callback) {
             var results = [];
