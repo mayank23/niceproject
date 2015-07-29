@@ -22,8 +22,8 @@
                 for(var i=0;i<properties.length;i++)
                 {
                     // init property score object.
-                    propertyScores[i] = {propertyIndex: i, score: 0};
-                    // evaul property
+                    propertyScores[i] = {propertyIndex: i, score: 0, filterPercentages:[]};
+                    // eval property
                     evaluteRealEstate(properties[i], i);
                 }
             });
@@ -51,8 +51,9 @@
         function evaluteRealEstate(realEstate, index){
             var count = 0;
             // non competitor scoring.
-            getWalkScore(realEstate.address, 1, function(resultScore){
+            getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
+                propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
                 count++;
                 checkAllFinished(count);
             });
@@ -240,7 +241,7 @@
                     } else {
                         result =  0;
                     }
-                    callback(result);
+                    callback(result, 4*userRank);
                 }
             });
         }
