@@ -30,7 +30,7 @@
                     });
         }
 
-        function rankIncome(userRankingPreference, importance) {
+        function rankIncome(userRankingPreference, importance, callback) {
             var trueIncome = test.income_per_capita;
             var rank;
 
@@ -51,10 +51,10 @@
             }
 
             var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
-            return (finalRank * importance);
+            callback(finalRank * importance);
         }
 
-        function rankPopulation(userRankingPreference, importance) {
+        function rankPopulation(userRankingPreference, importance, callback) {
             var truePopulation = test.population;
             var rank;
 
@@ -75,10 +75,10 @@
             }
 
             var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
-            return (finalRank * importance);
+            callback(finalRank * importance);
         }
 
-        function rankAgeRange(userRankingPreference, importance) {
+        function rankAgeRange(userRankingPreference, importance, callback) {
             var trueAgeRange = test.age;
             var rank;
 
@@ -99,21 +99,26 @@
             }
 
             var finalRank = Math.abs(4 - Math.abs(rank - userRankingPreference));
-            return (finalRank * importance);
+            callback(finalRank * importance);
         }
 
         var test;
         gatherCensusData(93063);
         setTimeout(function () {
-            rankIncome(4, 5))
-        }, 5000);
-        setTimeout(function() {
-            rankPopulation(3, 3))
-        }, 5000);
-        setTimeout(function() {
-            rankAgeRange(2, 1))
-        }, 5000);
+            rankIncome(4, 5, function(results) {
 
+            });
+        }, 5000);
+        setTimeout(function() {
+            rankPopulation(3, 3, function(results) {
+
+            });
+        }, 5000);
+        setTimeout(function() {
+            rankAgeRange(2, 1, function(results) {
+
+            });
+        }, 5000);
     </script>
 
 </head>
