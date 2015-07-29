@@ -17,8 +17,10 @@
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
   <script type="text/javascript" src="include/gmap3.min.js"></script>
   <script src="include/init.js" type="text/javascript"></script>
-
+  <script src="include/citysdk.js" type="text/javascript"></script>
+  <script src="include/citysdk.census.js" text="text/javascript"></script>
   <script src="include/filter.js" type="text/javascript"></script>
+  <script src="main.js"></script>
 
 </head>
 <body class="startview">
@@ -114,6 +116,8 @@
             <div class="ca-content">
               <h2 class="ca-main">Population</h2>
               <h3 class="ca-sub">Professionals in action</h3>
+              <h5 id="population-indicator" for="population-slider" eadonly style="border:0; color:#f6931f; font-weight:bold; background-color:transparent"class="ca-sub">26-32</h5>
+              <div id="population-slider"></div>
             </div>
           </a>
         </li>
@@ -134,7 +138,12 @@
     <div class="spacer" style="clear: both"></div>
 
     <div id="results" class="results">
-      blah blah blah blah blah a list of results
+      <table id="resultsTable" class="table">
+                        <tr>
+                            <th align="left">Rank</th>
+                            <th align="left">Details</th>
+                        </tr>
+      </table>
     </div>
   </div>
   <div id="map-canvas"></div>
@@ -143,5 +152,7 @@
 <div class="container">
 
 </div>
+<script>
+</script>
 </body>
 </html>
