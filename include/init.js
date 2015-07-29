@@ -15,7 +15,7 @@ var showMapView = function() {
 };
 
 var recalcSize = function() {
-  var mapWidth = $(window).width() - 240;
+  var mapWidth = $(window).width() - 400;
   var contentHeight = $(window).height() - 50;
 
   $("#map-canvas").width(mapWidth)
