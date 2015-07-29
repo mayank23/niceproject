@@ -108,4 +108,23 @@ function addProvidersToMap(providers) {
     }
 }
 
+function addRealEstateToMap(locations) {
+    for (var i = 0; i < addCompetitorsToMap; i++) {
+        var latlng = new google.maps.LatLng(locations[i].propertyInfo.lat, locations[i].propertyInfo.lng);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            draggable: false,
+            opacity: 1.0,
+            /*icon: {
+                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+                anchor: new google.maps.Point(3, 28),
+                //size of push pin
+                scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
+            },*/
+            optimized: false,
+            label: locations[i].propertyInfo.overview
+        });
+    }
+}
 $(window).resize(recalcSize);
