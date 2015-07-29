@@ -127,4 +127,27 @@ function addRealEstateToMap(locations) {
         });
     }
 }
+
+//delete table data, keep headers
+function deleteTable() {
+    $("tbody").children().remove();
+    var table = document.getElementById("resultsTable");
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    cell1.innerHTML = "Rank";
+    cell2.innerHTML = "Details";
+}
+
+function fillTable(results) {
+    deleteTable();
+    var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
+    for (var i = 0; i < results.length; i++) {
+        html += '<tr><td>' + (parseInt(results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+    }
+
+    $('#resultsTable tr').first(html).after(html);
+    $('#resultsTable tr:first').remove();
+}
+
 $(window).resize(recalcSize);
