@@ -5,11 +5,12 @@
       var finishedCount = 0;
       var totalFilters = 8;
       var properties;
-      var olat = 33.4500;
-      var olong = -112.0667;
+
       function generateRecommended(address, filters)
       {
            // get all open real estate.
+           var olat = address.location.geometry.G;
+           var olong = address.location.geometry.K;
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
                 
