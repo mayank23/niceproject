@@ -102,9 +102,7 @@ function addCompetitorsToMap(competitors) {
             icon: {
                 url: '/css/img/competitoricon.png',
             },
-            optimized: false,
             animation: google.maps.Animation.DROP,
-            label: competitors[i].name
         });
     }
 }
@@ -120,9 +118,7 @@ function addProvidersToMap(providers) {
             icon: {
                 url: '/css/img/restaurantprovidericon.png'
             },
-            optimized: false,
             animation: google.maps.Animation.DROP,
-            label: providers[i].name
         });
     }
 }
@@ -134,13 +130,10 @@ function addRealEstateToMap(locations) {
             position: latlng,
             map: map,
             draggable: false,
-            opacity: 1.0,
             icon: {
                 url: '/css/img/realestateicon.png'
             },
             animation: google.maps.Animation.DROP,
-            optimized: false,
-            label: locations[i].propertyInfo.overview
         });
     }
 }
