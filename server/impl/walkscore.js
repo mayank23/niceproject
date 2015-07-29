@@ -12,7 +12,12 @@ request(url, function(error, response, body){
          
     res.setHeader('Content-Type', 'text/plain');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:52096');
-    res.send(body);
+    
+    var json = JSON.parse(body);
+    var obj = {
+      'walkscore': json.walkscore
+    };
+    res.send(JSON.stringify(obj));
   }
   return next();
 });
