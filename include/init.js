@@ -4,7 +4,7 @@ var STARTVIEW = 0;
 var MEDVIEW = 1;
 var ENDVIEW = 2;
 var currView = STARTVIEW;
-var map = $("#map-canvas").gmap3("get");
+var map;
 
 var showMapView = function() {
   console.log("showmapview is called");
@@ -12,6 +12,7 @@ var showMapView = function() {
   $('#search-submit-mid').attr('id','search-submit-small');
   $('#searchbox-mid').attr('id','searchbox-small');
   $('#mid').attr('id','finish');
+
 
 
   $("body").removeClass("medview")
@@ -26,10 +27,26 @@ var showMapView = function() {
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
-    useUpdatedLocation(autocomplete.getPlace());
   });
+    map  = $("#map-canvas").gmap3("get");
   $("#side-bar").tabs();
   currView = ENDVIEW;
+
+  $(".disable-filter").click(function(){
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("enabled")
+        .addClass("disabled");
+    filterElem.appendTo("#sortable-filters");
+    reorderFilters();
+  });
+
+  $(".enable-filter").click(function() {
+    var filterElem = $(this).closest("li");
+    filterElem.removeClass("disabled")
+        .addClass("enabled");
+    filterElem.prependTo("#sortable-filters");
+    reorderFilters();
+  })
 };
 
 var recalcSize = function() {
@@ -48,6 +65,7 @@ $(document).ready(function() {
   autocomplete = new google.maps.places.Autocomplete(input);
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     mapLocation = autocomplete.getPlace().geometry.location;
+    useUpdatedLocation(autocomplete.getPlace());
     if (currView === STARTVIEW)
       showFilterView();
   });
@@ -56,19 +74,7 @@ $(document).ready(function() {
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
 
-  $("#sortable-filters").on("sortupdate", function() {
-    console.log("it's go time");
-    filter.price.priority = getPositionInRankings(".filter-price");
-    filter.competitors.priority = getPositionInRankings(".filter-competitors");
-    filter.providers.priority = getPositionInRankings(".filter-providers");
-    filter.wealth.priority = getPositionInRankings(".filter-income");
-    filter.walkscore.priority = getPositionInRankings(".filter-walkscore");
-    filter.age.priority = getPositionInRankings(".filter-age");
-    filter.population.priority = getPositionInRankings(".filter-population");
-    filter.distance.priority = getPositionInRankings(".filter-distance");
-
-    useUpdatedFilter();
-  });
+  $("#sortable-filters").on("sortupdate", reorderFilters);
 });
 
 var showFilterView = function() {
@@ -80,6 +86,7 @@ var showFilterView = function() {
   $("body").removeClass("startview")
       .addClass("medview");
   currView = MEDVIEW;
+  $('#filter-div').height("inherit");
   return false;
 };
 
@@ -91,13 +98,14 @@ function addCompetitorsToMap(competitors) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/competitoricon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: competitors[i].name
         });
     }
@@ -111,13 +119,14 @@ function addProvidersToMap(providers) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/restaurantprovidericon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: providers[i].name
         });
     }
@@ -131,12 +140,13 @@ function addRealEstateToMap(locations) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/realestateicon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
+            animation: google.maps.Animation.DROP,
             optimized: false,
             label: locations[i].propertyInfo.overview
         });
@@ -158,7 +168,7 @@ function fillTable(results) {
     deleteTable();
     var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
     for (var i = 0; i < results.length; i++) {
-        html += '<tr><td>' + (parseInt(results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+        html += '<tr><td>' + parseInt((results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
     }
 
     $('#resultsTable tr').first(html).after(html);
@@ -166,4 +176,3 @@ function fillTable(results) {
 }
 
 $(window).resize(recalcSize);
-

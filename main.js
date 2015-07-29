@@ -24,18 +24,19 @@
       }
 
  // once all property scores have finished evaluating.
-        function onDataComplete()
-        {
-                // calculate percentage matches.
-                for(var i=0;i<propertyScores.length;i++)
-                {
-                    propertyScores[i].rank = 100 * (propertyScores[i].score / propertyScores[i].maxScore);
-                }
+        function onDataComplete() {
+            addRealEstateToMap(propertyScores);
+           // calculate percentage matches.
+            for(var i=0;i<propertyScores.length;i++)
+            {
+                propertyScores[i].rank = 100 * (propertyScores[i].score / propertyScores[i].maxScore);
+            }
 
-                propertyScores = propertyScores.sort(function(a,b){
-                    return b.rank - a.rank;
-                });
-                console.log(propertyScores);
+            propertyScores = propertyScores.sort(function(a,b){
+                return b.rank - a.rank;
+            });
+            fillTable(propertyScores); 
+            console.log(propertyScores);
         }
 
         function checkAllFinished(count)
@@ -81,7 +82,8 @@
               dataType: 'json',
               success: function(data){
                 // results are competitors.
-                 var results = data.results;
+                  var results = data.results;
+                  addCompetitorsToMap(results);
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
                     

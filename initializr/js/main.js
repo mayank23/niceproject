@@ -5,11 +5,15 @@
       var finishedCount = 0;
       var totalFilters = 8;
       var properties;
-      var olat = 33.4500;
-      var olong = -112.0667;
+     
       function generateRecommended(address, filters){
+
            // get all open real estate.
-            getOpenRealEstate(olat, olong, 2, function(list){
+           var olat = address.geometry.location.G;
+           var olong = address.geometry.location.K;
+
+            getOpenRealEstate(olat, olong, filters, function(list){
+                
                 properties = list;
                 
                 for(var i=0;i<properties.length;i++)
@@ -17,7 +21,7 @@
                     // init property score object.
                     propertyScores[i] = {propertyInfo: properties[i], score: 0, maxScore: 0, rank: 0};
                     // eval property
-                    evaluteRealEstate(properties[i], i);
+                    evaluteRealEstate(properties[i],filters, i);
                 }
             });
       }
@@ -25,6 +29,8 @@
  // once all property scores have finished evaluating.
         function onDataComplete()
         {
+                addRealEstateToMap(propertyScores);
+
                 // calculate percentage matches.
                 for(var i=0;i<propertyScores.length;i++)
                 {
@@ -34,6 +40,8 @@
                 propertyScores = propertyScores.sort(function(a,b){
                     return b.rank - a.rank;
                 });
+
+                fillTable(propertyScores);
                 console.log(propertyScores);
         }
 
@@ -49,19 +57,19 @@
             }
         }
 
-       function evaluteRealEstate(realEstate, index){
+       function evaluteRealEstate(realEstate,filters, index){
             var count = 0;
             var address = realEstate.propertyInfo.address;
             var zipcode = address.substring(address.lastIndexOf(" ") + 1);
             // non competitor scoring.
-            getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
+            getWalkScore(realEstate.address, filters['walkscore'].priority, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
                 propertyScores[index].maxScore += maxScore;
                 count++;
                 checkAllFinished(count);
             });
 
-            getOriginDistanceScore(properties[index].lat, properties[index].lng, olat, olong, 3, 3, function(resultScore, maxScore){
+            getOriginDistanceScore(properties[index].lat, properties[index].lng, olat, olong, filters['distance'].val, filters['distance'].priority, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
                 propertyScores[index].maxScore += maxScore;
                 count++;
@@ -69,7 +77,7 @@
             });
 
             
-            getPriceScore(200000, 15000, realEstate.price, 2, function(resultScore, maxScore){
+            getPriceScore(filters['price'].val[1], filters['price'].val[0], realEstate.price, filters['price'].priority, function(resultScore, maxScore){
                     propertyScores[index].score += resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
@@ -84,38 +92,49 @@
                 // results are competitors.
                  var results = data.results;
                  // calculate scores based on competitors now.
-                  getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
+                  getCompetitorScore(results, olat, olong, filter['competitors'].priority, function(resultScore, maxScore){
                     
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
+                    addCompetitorsToMap(results);
                   
                   });
-                 
-                  getRestaurantScore(results, olat, olong, 3, function(resultScore, maxScore){
-                    propertyScores[index].score+=resultScore;
+                }
+            });
+
+            $.ajax({
+              url: 'http://10.22.253.245/places?'+'query='+'restaurant suppliers near ' + realEstate.address,
+              dataType: 'json',
+              success: function(data){
+                // results are providers.
+                 var results = data.results;
+                 // calculate scores based on providers now.
+                   getRestaurantProvidersScore(results, olat, olong, filter['providers'].priority, function(resultScore, maxScore){
+                    propertyScores[index].score += resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
+                    addProvidersToMap(results);
                     });
-              }
+                }
             });
 
             gatherCensusData(zipcode, function(data) {
-                rankIncome(4, 5, data, function(resultScore, maxScore) { 
+                rankIncome(filters['wealth'].val, filters['wealth'].priority, data, function(resultScore, maxScore) { 
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
                 });
-                rankPopulation(3, 3, data, function(resultScore, maxScore) {
+                rankPopulation(filters['population'].val, filters['priority'].priority, data, function(resultScore, maxScore) {
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
                 });
-                rankAgeRange(2, 1, data, function(resultScore, maxScore) {
+                rankAgeRange(filters['age'].val, filters['age'].priority,data, function(resultScore, maxScore) {
                     propertyScores[index].score+=resultScore;
                     propertyScores[index].maxScore += maxScore;
                     count++;
@@ -239,7 +258,7 @@
             callback(num * userRank, 4 * userRank);
         }
 
-        function getRestaurantScore(competitors, originLat, originLon, userRank, callback) {
+        function getRestaurantProviderScore(providers, originLat, originLon, userRank, callback) {
             var minDistance = 0;
             var result = 0;
             for (var i = 0; i < competitors.length; i++) {
