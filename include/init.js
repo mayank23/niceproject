@@ -26,7 +26,6 @@ var showMapView = function() {
   }
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $("#map-canvas").gmap3("get").setCenter(autocomplete.getPlace().geometry.location);
-    useUpdatedLocation(autocomplete.getPlace());
   });
   $("#side-bar").tabs();
   currView = ENDVIEW;
@@ -55,20 +54,6 @@ $(document).ready(function() {
   $("#sortable-filters").sortable();
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
-
-  $("#sortable-filters").on("sortupdate", function() {
-    console.log("it's go time");
-    filter.price.priority = getPositionInRankings(".filter-price");
-    filter.competitors.priority = getPositionInRankings(".filter-competitors");
-    filter.providers.priority = getPositionInRankings(".filter-providers");
-    filter.wealth.priority = getPositionInRankings(".filter-income");
-    filter.walkscore.priority = getPositionInRankings(".filter-walkscore");
-    filter.age.priority = getPositionInRankings(".filter-age");
-    filter.population.priority = getPositionInRankings(".filter-population");
-    filter.distance.priority = getPositionInRankings(".filter-distance");
-
-    useUpdatedFilter();
-  });
 });
 
 var showFilterView = function() {
@@ -91,13 +76,14 @@ function addCompetitorsToMap(competitors) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/competitoricon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: competitors[i].name
         });
     }
@@ -111,13 +97,14 @@ function addProvidersToMap(providers) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/restaurantprovidericon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: providers[i].name
         });
     }
@@ -131,12 +118,13 @@ function addRealEstateToMap(locations) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/realestateicon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
+            animation: google.maps.Animation.DROP,
             optimized: false,
             label: locations[i].propertyInfo.overview
         });
@@ -166,4 +154,3 @@ function fillTable(results) {
 }
 
 $(window).resize(recalcSize);
-
