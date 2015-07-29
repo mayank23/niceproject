@@ -13,7 +13,7 @@ var showMapView = function() {
   $('#mid').attr('id','finish');
 
 
-  $("body").removeClass("startview")
+  $("body").removeClass("medview")
     .addClass("mapview");
 
   recalcSize();
@@ -31,7 +31,7 @@ var showMapView = function() {
 };
 
 var recalcSize = function() {
-  var mapWidth = $(window).width() - 240;
+  var mapWidth = $(window).width() - 400;
   var contentHeight = $(window).height() - 50;
 
   $("#map-canvas").width(mapWidth)
@@ -60,6 +60,8 @@ var showFilterView = function() {
   $('#searchbox-large').attr('id','searchbox-mid');
   $('#start').attr('id','mid');
   console.log("called or not");
+  $("body").removeClass("startview")
+      .addClass("medview");
   currView = MEDVIEW;
   return false;
 };
