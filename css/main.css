@@ -65,6 +65,10 @@ html, body {
   display: none;
 }
 
+.mapview #results {
+    overflow: scroll;
+}
+
 .mapview .side-bar {
   height: 100%;
   width: 400px;

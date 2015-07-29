@@ -62,7 +62,8 @@ var recalcSize = function() {
   $("#map-canvas").width(mapWidth)
     .height(contentHeight);
   $(".side-bar").height(contentHeight);
-  $("#sortable-filters").height(contentHeight - 52);
+    $("#sortable-filters").height(contentHeight - 52);
+    $("#results").height(contentHeight - 52);
 };
 
 $(document).ready(function() {
@@ -142,6 +143,7 @@ function addRealEstateToMap(locations) {
             },
             animation: google.maps.Animation.DROP,
         });
+        
         markers.push(marker);
     }
 }
