@@ -25,9 +25,7 @@
   
 
   <div id="top-filters" class="top-filters">
-
       blah blah blah we'll make the map invisible for the first screen state and this will be bigger but proof of concept for loading map
-
   </div>
     <div id="content-container" style= "z-index:1000">
       <div id="side-bar" class="side-bar">
@@ -36,20 +34,54 @@
           <li><a href="#results">Results</a></li>
         </ul>
         <div id="filters" class="filters">
-          <div class="filter-container">
-            <p>
-              <label for="cost-slider-indicator">Only show me properties in this range of prices:</label>
-              <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
-            <div id="cost-slider"></div>
-          </div>
-          <div class="filter-container">
-            <p>
-              Favor neighborhoods with 
-              <label id="wealth-indicator" for="wealth-slider">Moderate affluency</label>
-            </p>
-            <div id="wealth-slider"></div>
-          </div>
+          <ul id="sortable-filters">
+            <li class="ui-state-default">
+              <div class="filter-container">
+                <p>
+                  <label for="cost-slider-indicator">Only show me properties in this range of prices:</label>
+                  <input type="text" id="cost-slider-indicator" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                </p>
+                <div id="cost-slider"></div>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-wealth">
+                <p>
+                  Favor neighborhoods with
+                  <label id="wealth-indicator" for="wealth-slider">Moderate affluency</label>
+                </p>
+                <div id="wealth-slider"></div>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-accessibility">
+                <p>
+                  Favor locations that are very accessible by foot, car, and bicycle.
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-competition">
+                <p>
+                  Favor locations that are far away from other restaurants
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-population">
+                <p>
+                  Favor locations with high populations
+                </p>
+              </div>
+            </li>
+            <li class="ui-state-default">
+              <div class="filter-container filter-crime">
+                <p>
+                  Favor locations less history of crime
+                </p>
+              </div>
+            </li>
+          </ul>
           <a href="#" id="go-to-mapview">go</a>
           <div class="spacer" style="clear: both"></div>
         </div>

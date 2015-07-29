@@ -140,3 +140,18 @@ html, body {
   margin-top:40px;
   background-image: url("img/marker.png")
 }
+
+#sortable-filters {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+#sortable-filters li {
+  margin: 0px;
+  padding: 0px;
+}
+
+.ui-tabs .ui-tabs-panel {
+  padding: 0px;
+}

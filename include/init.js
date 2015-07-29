@@ -7,6 +7,8 @@ var showMapView = function() {
   recalcSize();
   $("#map-canvas").show().gmap3();
   $("#side-bar").tabs();
+  $("#sortable-filters").sortable();
+  $("#sortable-filters").disableSelection();
 };
 
 var recalcSize = function() {
