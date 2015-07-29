@@ -19,7 +19,7 @@ $(function() {
     range: true,
     min: 0,
     max: 15000,
-    values: [75, 300],
+    values: [75, 15000],
     stop: function(event, ui) {
       updateCostSlider(ui.values);
     }
