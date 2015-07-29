@@ -11,7 +11,7 @@
 
         censusModule.enable("c1b2930d3ce73910373c35fe2a4bddae76fd3492");
 
-        function gatherCensusData(zipCode) {
+        function gatherCensusData(zipCode, callback) {
             var request = {
                 "level": "tract",
                 "zip": zipCode,
@@ -26,12 +26,12 @@
                 ]}
 
                 censusModule.APIRequest(request, function (response) {
-                        test = response.data[0];
+                        callback(response.data[0]);
                     });
         }
 
-        function rankIncome(userRankingPreference, importance, callback) {
-            var trueIncome = test.income_per_capita;
+        function rankIncome(userRankingPreference, importance, data, callback) {
+            var trueIncome = data.income_per_capita;
             var rank;
 
             if (trueIncome <=  12000) {
@@ -54,8 +54,8 @@
             callback(finalRank * importance);
         }
 
-        function rankPopulation(userRankingPreference, importance, callback) {
-            var truePopulation = test.population;
+        function rankPopulation(userRankingPreference, importance, data, callback) {
+            var truePopulation = data.population;
             var rank;
 
             if (truePopulation <=  2000) {
@@ -78,8 +78,8 @@
             callback(finalRank * importance);
         }
 
-        function rankAgeRange(userRankingPreference, importance, callback) {
-            var trueAgeRange = test.age;
+        function rankAgeRange(userRankingPreference, importance, data, callback) {
+            var trueAgeRange = data.age;
             var rank;
 
             if (trueAgeRange <=  25) {
@@ -102,23 +102,18 @@
             callback(finalRank * importance);
         }
 
-        var test;
-        gatherCensusData(93063);
-        setTimeout(function () {
-            rankIncome(4, 5, function(results) {
-
+        gatherCensusData(93063, function(data) {
+            rankIncome(4, 5, data, function(results) {
+                alert(results);
             });
-        }, 5000);
-        setTimeout(function() {
-            rankPopulation(3, 3, function(results) {
-
+            rankPopulation(3, 3, data, function(results) {
+                alert(results);
             });
-        }, 5000);
-        setTimeout(function() {
-            rankAgeRange(2, 1, function(results) {
-
+            rankAgeRange(2, 1, data, function(results) {
+                alert(results);
             });
-        }, 5000);
+        });
+
     </script>
 
 </head>
