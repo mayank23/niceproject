@@ -47,4 +47,33 @@ $(function() {
     }
   });
   updateWealthIndicator(2);
+
+  var updateAgeIndicator = function(age) {
+    var indicator;
+
+    if (age === 0) {
+      indicator = "0 - 25";
+    } else if (age === 1) {
+      indicator = "26 - 32";
+    } else if (age === 2) {
+      indicator = "33 - 42";
+    } else if (age === 3) {
+      indicator = "43 - 55";
+    } else if (age === 4) {
+      indicator = "56+";
+    }
+
+    filter.age = age;
+    $("#age-indicator").html(indicator);
+  };
+
+  $("#age-slider").slider({
+    min: 0,
+    max: 4,
+    value: 2,
+    slide: function(event, ui) {
+      updateAgeIndicator(ui.value);
+    }
+  });
+  updateAgeIndicator(2);
 });
