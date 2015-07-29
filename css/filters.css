@@ -1,0 +1,16 @@
+.filter-container {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.startview .side-bar  .filter-container {
+  width: 300px;
+  min-height: 150px;
+  display: inline-block;
+  float: left;
+  margin: 10px;
+}
+
+.mapview .side-bar .filter-container {
+  width: 200px;
+}
