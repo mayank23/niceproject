@@ -6,7 +6,7 @@ var filter = {
   walkscore: {priority: 4},
   age: {val: 2, priority: 3},
   population: {priority: 2},
-  distance: {priority: 1}
+  distance: {val: 20, priority: 1}
 };;
 
 $(function() {
@@ -152,4 +152,5 @@ var useUpdatedLocation = function(location) {
 var callUpdate = function() {
   var loc = {address_components: autocomplete.getPlace().address_components,
     geometry: autocomplete.getPlace().geometry};
+  generateRecommended(loc, filter);
 };
