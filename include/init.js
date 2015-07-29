@@ -46,7 +46,8 @@ var showMapView = function() {
         .addClass("enabled");
     filterElem.prependTo("#sortable-filters");
     reorderFilters();
-  })
+  });
+  reorderFilters();
 };
 
 var recalcSize = function() {
@@ -75,6 +76,7 @@ $(document).ready(function() {
   $("#search-submit-large").click(showFilterView);
 
   $("#sortable-filters").on("sortupdate", reorderFilters);
+  $("#button-submit").click(submitForm);
 });
 
 var showFilterView = function() {
@@ -175,4 +177,32 @@ function fillTable(results) {
     $('#resultsTable tr:first').remove();
 }
 
+var submitForm = function() {
+  console.log("form is submitted");
+  $("#filter-select li").each(function(child) {
+    child = $(this);
+    console.log("child!" + child.text());
+    console.log(child);
+    console.log(child.find("input"));
+    if (!child.find("input").is(":checked")) {
+      disableFilter(child.find("input").attr("filter"));
+      console.log("disabled: " + child.find("input").attr("filter"));
+    }
+    else
+      console.log("the child was enabled :)");
+  });
+  showMapView();
+};
+
 $(window).resize(recalcSize);
+
+
+
+var disableFilter = function(filter) {
+  console.log("gotta disable " + filter)
+  var filterElem = $("." + filter);
+  console.log(filterElem);
+  filterElem.removeClass("enabled")
+      .addClass("disabled");
+  filterElem.appendTo("#sortable-filters");
+};
