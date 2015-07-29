@@ -124,8 +124,10 @@ var getPositionInRankings = function(filterName) {
 
 var useUpdatedFilter = function() {
   console.log(filter);
+  console.log(autocomplete.getPlace());
 };
 
 var useUpdatedLocation = function(location) {
   console.log(location);
+  console.log(JSON.stringify(autocomplete.getPlace()));
 }

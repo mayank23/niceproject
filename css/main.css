@@ -37,10 +37,17 @@ html, body {
 #finish {
   height:50px;
   transition:1.5s;
+  padding: 0px;
+  margin-bottom: 0px;
+  background-image: none;
+  background-color: #77c043;
 }
 
 .medview #side-bar-tabs {
   display:none;
+}
+.mapview #side-bar-tabs {
+  background-color: #77c043;
 }
 .medview #results {
   display: none;
