@@ -6,7 +6,7 @@ var i = './impl';
 var places = require(i + '/places.js');
 var catylist = require(i + '/catylist.js');
 var walkscore = require(i+ '/walkscore.js');
-
+var crime = require(i + '/crime.js');
 var server = restify.createServer({
   name: 'hackathon server'
 });
@@ -19,3 +19,4 @@ server.listen(80,function(){
 server.get('/places', places);
 server.get('/catylist', catylist);
 server.get('/walkscore', walkscore);
+server.get('/crime', crime);
