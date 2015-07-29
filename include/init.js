@@ -22,7 +22,7 @@ var showMapView = function() {
 
   recalcSize();
   $("#map-canvas").show().gmap3({
-    map: {options: {zoom:12}}
+    map: {options: {zoom:14}}
   });
   if (mapLocation) {
     $("#map-canvas").gmap3("get").setCenter(mapLocation);
@@ -168,7 +168,7 @@ function fillTable(results) {
     deleteTable();
     var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
     for (var i = 0; i < results.length; i++) {
-        html += '<tr><td>' + parseInt((results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+        html += '<tr ><td style="color:#FF9933">' + parseInt((results[i].rank)) + '% Match</td><td style="color:#77c043">' + results[i].propertyInfo.address + '</br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + ' per month</td></tr>';
     }
 
     $('#resultsTable tr').first(html).after(html);
