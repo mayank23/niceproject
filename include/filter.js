@@ -151,7 +151,7 @@ var useUpdatedLocation = function(location) {
 
 var callUpdate = function() {
   if (!autocomplete.getPlace()) { return; }
-
+  deleteMarkers();
   var lat = autocomplete.getPlace().geometry.location.G;
   var lng = autocomplete.getPlace().geometry.location.K;
   generateRecommended(lat, lng, filter);
