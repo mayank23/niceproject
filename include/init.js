@@ -14,6 +14,7 @@ var showMapView = function() {
   $('#mid').attr('id','finish');
 
 
+
   $("body").removeClass("medview")
     .addClass("mapview");
 
@@ -84,6 +85,7 @@ var showFilterView = function() {
   $("body").removeClass("startview")
       .addClass("medview");
   currView = MEDVIEW;
+  $('#filter-div').height("inherit");
   return false;
 };
 
@@ -95,13 +97,14 @@ function addCompetitorsToMap(competitors) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/competitoricon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: competitors[i].name
         });
     }
@@ -115,13 +118,14 @@ function addProvidersToMap(providers) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/restaurantprovidericon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
             optimized: false,
+            animation: google.maps.Animation.DROP,
             label: providers[i].name
         });
     }
@@ -135,12 +139,13 @@ function addRealEstateToMap(locations) {
             map: map,
             draggable: false,
             opacity: 1.0,
-            /*icon: {
-                url: 'push_pin.png',//'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|03D10C',
+            icon: {
+                url: '/css/img/realestateicon.png',
                 anchor: new google.maps.Point(3, 28),
                 //size of push pin
                 scaledSize: new google.maps.Size(32 * Math.sqrt(Math.sqrt(size)) / 2, 32 * Math.sqrt(Math.sqrt(size)) / 2)
-            },*/
+            },
+            animation: google.maps.Animation.DROP,
             optimized: false,
             label: locations[i].propertyInfo.overview
         });
@@ -170,4 +175,3 @@ function fillTable(results) {
 }
 
 $(window).resize(recalcSize);
-
