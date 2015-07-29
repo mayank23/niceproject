@@ -5,9 +5,12 @@ var showMapView = function() {
     .addClass("top-filters-mapview");
   $("#side-bar").removeClass("side-bar-startview")
     .addClass("side-bar-mapview");
+  $("#side-bar-tabs").removeClass("side-bar-tabs-startview")
+    .addClass("side-bar-tabs-mapview");
 
   recalcSize();
   $("#map-canvas").show().gmap3();
+  $("#side-bar").tabs();
 };
 
 var recalcSize = function() {

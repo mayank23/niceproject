@@ -27,6 +27,18 @@
   float: right;
 }
 
+#side-bar-tabs {
+  float: none;
+}
+
+.side-bar-tabs-startview {
+  display: none;
+}
+
+.results-startview {
+  display: none;
+}
+
 #map-canvas {
   float: left;
   width: 100%;
