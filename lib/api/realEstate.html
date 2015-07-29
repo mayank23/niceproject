@@ -6,33 +6,79 @@
 <body>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
     <script>
-        var data = [];
+        var propertyScores = [];
+        // initialize array
+        for(var i=0;i<100;i++)
+        {
+            propertyScores[i] = 0;
+        }
+        var properties;
+        var olat = 33.4500;
+        var olong = -112.0667;
 
         $(document).ready(function() {
-            getOpenRealEstate(33.4500, -112.0667, 2);
-        });
-
-        function getWalkScore(address) {
-            var url = 'http://10.22.253.245/walkscore?address=' + address;
-            var walkscore = 0;
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                success: function (data) {
-                    var json = JSON.parse(data);
-                    walkscore = json.walkscore;
+            // get all open real estate.
+            getOpenRealEstate(olat, olong, 2, function(list){
+                properties = list;
+                console.log(properties);
+                for(var i=0;i<properties.length;i++)
+                {
+                    evaluteRealEstate(properties[i], i);
                 }
             });
-        } 
+        });
 
-        function getOpenRealEstate(latitude, longitude, miles) {
+        function evaluteRealEstate(realEstate, index){
+            var count = 0;
+            // non competitor scoring.
+            getWalkScore(realEstate.address, 1, function(resultScore){
+                propertyScores[index] += resultScore;
+                count++;
+                if(count === 3)
+                {
+ console.log(propertyScores);
+ 
+                }
+            });
+         /*   getPriceScore(200000, getRealEstatePrice(realEstate.price,realEstate.size), function(resultScore){
+                propertyScores[index] += resultScore;
+            });*/
+
+            // get competitors and async update score.
+            $.ajax({
+              url: 'http://10.22.253.245/places?'+'query='+'restaurants near ' + realEstate.address,
+              dataType: 'json',
+              success: function(data){
+                // results are competitors.
+                 var results = data.results;
+                 // calculate scores based on competitors now.
+                  getCompetitorScore(results, olat, olong, 2, function(resultScore){
+                    propertyScores[index]+=resultScore;
+                    count++;
+                     if(count === 3)
+                     {
+                     console.log(propertyScores);
+                     }
+                  });
+                  getRestaurantScore(results, olat, olong, 3, function(resultScore){
+                    propertyScores[index]+=resultScore;
+                    count++;
+                     if(count === 3){
+                        console.log(propertyScores);
+                     }
+                    
+                    });
+              }
+            });
+        }
+
+        function getOpenRealEstate(latitude, longitude, miles, callback) {
             var results = [];
             var radius = miles * 1600;
             var url = 'http://10.22.253.245/catylist?latitude=' + latitude + "&longitude=" + longitude + '&radius=' + radius;
             $.ajax({
                 url: url,
                 dataType: 'text',
-                async: false,
                 success: function (data) {
                     var str = data.substring(data.indexOf('CDATA') + 6);
                     str = str.substring(0, str.indexOf(']]>'));
@@ -50,11 +96,13 @@
                                 size: size
                             }
                             results.push(store);
+
                         }
                     });
+
+                    callback(results);
                 }
             });
-            return results;
         }
 
         function getRealEstateSize(size) {
@@ -103,28 +151,30 @@
             return deg * (Math.PI / 180);
         }
 
-        function getCompetitorScore(competitors, originLat, originLon, userRank) {
+        function getCompetitorScore(competitors, originLat, originLon, userRank, callback) {
             var closeCompetitors = 0;
+            var result =0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
-                if (getDistance(comp.lat, comp.long, originLat, originLon) <= 5) {
+                if (getDistance(comp.geometry.location.lat, comp.geometry.location.lng, originLat, originLon) <= 5) {
                     closeCompetitors++;
                 }
                 if (closeCompetitors > 10) {
-                    return 0;
+                    return callback(0);
                 }
             }
             if (closeCompetitors > 10) {
-                return 0;
+                result =  0;
             } else if (closeCompetitors >= 8) {
-                return 1 * userRank;
+                result =  1 * userRank;
             } else if (closeCompetitors >= 5) {
-                return 2 * userRank;
+                result =  2 * userRank;
             } else if (closeCompetitors >= 2) {
-                return 3 * userRank;
+                result =  3 * userRank;
             } else {
-                return 4 * userRank;
+                result = 4 * userRank;
             }
+            callback(result);
         }
 
         function getOriginDistanceScore(latitude, longitude, originLat, originLong, radius, userRank) {
@@ -133,54 +183,57 @@
             return num * userRank;
         }
 
-        function getRestaurantScore(competitors, originLat, originLon, userRank) {
+        function getRestaurantScore(competitors, originLat, originLon, userRank, callback) {
             var minDistance = 0;
+            var result = 0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
-                if (getDistance(comp.lat, comp.long, originLat, originLon) < minDistance) {
-                    minDistance = getDistance(comp.lat, comp.long, originLat, originLon);
+                if (getDistance(comp.geometry.location.lat, comp.geometry.location.lng, originLat, originLon) < minDistance) {
+                    minDistance = getDistance(comp.geometry.location.lat, comp.geometry.location.lng, originLat, originLon);
                 }
             }
             if (minDistance > 20) {
-                return 0;
+                result = 0;
             } else if (minDistance >= 15) {
-                return 1 * userRank;
+                result =  1 * userRank;
             } else if (minDistance >= 9) {
-                return 2 * userRank;
+                result =  2 * userRank;
             } else if (minDistance >= 3) { 
-                return 3 * userRank;
+                result =  3 * userRank;
             } else {
-                return 4 * userRank;
+                result =  4 * userRank;
             }
+            callback(result);
         }
 
-        function getWalkScore(address, userRank) {
+        function getWalkScore(address, userRank, callback) {
             var url = 'http://10.22.253.245/walkscore?address=' + address;
+            var result = 0;
             var walkscore = 0;
             $.ajax({
                 url: url,
                 dataType: 'json',
                 async: false,
                 success: function (data) {
-                    var json = JSON.parse(data);
-                    walkscore = json.walkscore;
+                    walkscore = data.walkscore;
                 }
             });
             if (walkscore > 80) {
-                return 4 * userRank;
+                result =  4 * userRank;
             } else if (walkscore > 60) {
-                return 3 * userRank;
+                result = 3 * userRank;
             } else if (walkscore > 40) {
-                return 2 * userRank;
+                result = 2 * userRank;
             } else if (walkscore > 20) {
-                return 1 * userRank;
+                result = 1 * userRank;
             } else {
-                return 0;
+                result =  0;
             }
+            callback(result);
         }
    
-        function getPriceScore(maxPrice, curPrice) {
-            return curPrice > maxPrice ? 0 : 4;
+        function getPriceScore(maxPrice, curPrice, callback) {
+            return curPrice > maxPrice ? callback(0) : callback(4);
         }
     
     </script>
