@@ -156,6 +156,7 @@
             var result =0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
+
                 if (getDistance(comp.geometry.location.lat, comp.geometry.location.lng, originLat, originLon) <= 5) {
                     closeCompetitors++;
                 }
@@ -188,6 +189,7 @@
             var result = 0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
+
                 if (getDistance(comp.geometry.location.lat, comp.geometry.location.lng, originLat, originLon) < minDistance) {
                     minDistance = getDistance(comp.geometry.location.lat, comp.geometry.location.lng, originLat, originLon);
                 }
