@@ -3,12 +3,12 @@
     <title></title>
 </head>
 <body>
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
-    </script src="../include/async.js"></script>
+    <script src="../../include/jquery-2.1.4.min.js"></script>
+    </script src="../../include/async.js"></script>
     <script>
         var propertyScores = [];
         var finishedCount = 0;
-
+        var totalFilters = 4;
         var properties;
         var olat = 33.4500;
         var olong = -112.0667;
@@ -17,12 +17,11 @@
             // get all open real estate.
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
-                console.log(properties);
                 
                 for(var i=0;i<properties.length;i++)
                 {
                     // init property score object.
-                    propertyScores[i] = {propertyIndex: i, score: 0, filterPercentages:[]};
+                    propertyScores[i] = {propertyInfo: properties[i], score: 0, maxScore: 0, rank: 0};
                     // eval property
                     evaluteRealEstate(properties[i], i);
                 }
@@ -31,6 +30,12 @@
         // once all property scores have finished evaluating.
         function onDataComplete()
         {
+                // calculate percentage matches.
+                for(var i=0;i<propertyScores.length;i++)
+                {
+                    propertyScores[i].rank = 100 * (propertyScores[i].score / propertyScores[i].maxScore);
+                }
+
                 propertyScores = propertyScores.sort(function(a,b){
                     return b.score - a.score;
                 });
@@ -39,7 +44,7 @@
 
         function checkAllFinished(count)
         {
-            if(count === 3)
+            if(count === totalFilters)
             {
                 finishedCount++;
                 if(finishedCount === properties.length)
@@ -54,19 +59,26 @@
             // non competitor scoring.
             getWalkScore(realEstate.address, 1, function(resultScore, maxScore){
                 propertyScores[index].score += resultScore;
-                propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
+                propertyScores[index].maxScore += maxScore;
                 count++;
                 checkAllFinished(count);
             });
 
-            //getOriginDistanceScore(properties[i]., longitude, originLat, originLong, radius, userRank, callback)
-
-            /*
-            
-            getPriceScore(200000, realEstate.price , function(resultScore, maxScore){
-                    propertyScores[index].filterPercentages['walkscore'] = (resultScore / maxScore) * 100;
+            getOriginDistanceScore(properties[index].lat, properties[index].lng, olat, olong, 3, 3, function(resultScore, maxScore){
+                propertyScores[index].score += resultScore;
+                propertyScores[index].maxScore += maxScore;
+                count++;
+                checkAllFinished(count);  
             });
-            */  
+
+            
+            getPriceScore(200000, realEstate.price, 2, function(resultScore, maxScore){
+                    propertyScores[index].score += resultScore;
+                    propertyScores[index].maxScore += maxScore;
+                    count++;
+                    checkAllFinished(count);  
+            });
+              
 
             // get competitors and async update score.
             $.ajax({
@@ -78,14 +90,14 @@
                  // calculate scores based on competitors now.
                   getCompetitorScore(results, olat, olong, 2, function(resultScore, maxScore){
                     propertyScores[index].score+=resultScore;
-                    propertyScores[index].filterPercentages['competitor_score'] = (resultScore / maxScore) * 100;
+                    propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
                   });
                  
                   getRestaurantScore(results, olat, olong, 3, function(resultScore, maxScore){
                     propertyScores[index].score+=resultScore;
-                    propertyScores[index].filterPercentages['restaurant_score'] = (resultScore / maxScore) * 100;
+                    propertyScores[index].maxScore += maxScore;
                     count++;
                     checkAllFinished(count);
                     });
@@ -256,7 +268,7 @@
         }
 
         function getPriceScore(maxPrice, curPrice, userRank, callback) {
-            return callback(curPrice > maxPrice ? callback(0) : callback(4), 4 * userRank);
+            return curPrice > maxPrice ? callback(0, 0) : callback(4, 4 * userRank);
         }
 
 
