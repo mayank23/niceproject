@@ -26,8 +26,7 @@
  // once all property scores have finished evaluating.
         function onDataComplete() {
             addRealEstateToMap(propertyScores);
-            fillTable(propertyScores);
-            // calculate percentage matches.
+           // calculate percentage matches.
             for(var i=0;i<propertyScores.length;i++)
             {
                 propertyScores[i].rank = 100 * (propertyScores[i].score / propertyScores[i].maxScore);
@@ -36,6 +35,7 @@
             propertyScores = propertyScores.sort(function(a,b){
                 return b.rank - a.rank;
             });
+            fillTable(propertyScores); 
             console.log(propertyScores);
         }
 

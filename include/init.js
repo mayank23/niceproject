@@ -167,7 +167,7 @@ function fillTable(results) {
     deleteTable();
     var html = '<tr><th align="left">Rank</th><th align="left">Details</th></tr>';
     for (var i = 0; i < results.length; i++) {
-        html += '<tr><td>' + (parseInt(results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
+        html += '<tr><td>' + parseInt((results[i].rank)) + '% Match</td><td>' + results[i].propertyInfo.address + '<br>' + results[i].propertyInfo.size + ' SF, $' + results[i].propertyInfo.price + 'per month</td></tr>';
     }
 
     $('#resultsTable tr').first(html).after(html);
