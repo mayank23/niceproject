@@ -13,6 +13,7 @@ var showMapView = function() {
   $('#mid').attr('id','finish');
 
 
+
   $("body").removeClass("medview")
     .addClass("mapview");
 
@@ -53,6 +54,7 @@ $(document).ready(function() {
   $("#sortable-filters").sortable();
   $("#sortable-filters").disableSelection();
   $("#search-submit-large").click(showFilterView);
+
 });
 
 var showFilterView = function() {
@@ -64,6 +66,7 @@ var showFilterView = function() {
   $("body").removeClass("startview")
       .addClass("medview");
   currView = MEDVIEW;
+  $('#filter-div').height("inherit");
   return false;
 };
 
