@@ -7,7 +7,7 @@ module.exports = function(req, res, next){
   var longitude = req.query.longitude;
   var radius = req.query.radius;
 
-  var url = 'http://www.catylist.com/jsp/common/ajax_provider.jsp?call=com.catylist.ajax.RealEstateSearchProvider.search(java.lang.Integer%200,java.lang.Integer%2050,java.lang.String%20null)&search2=true&center=' + latitude + '%2C-' + longitude + '%7C' + radius + '&noCache=1438111652375';
+  var url = 'http://www.catylist.com/jsp/common/ajax_provider.jsp?call=com.catylist.ajax.RealEstateSearchProvider.search(java.lang.Integer%200,java.lang.Integer%2050,java.lang.String%20null)&search2=true&center=' + latitude + '%2C' + longitude + '%7C' + radius + '&noCache=1438111652375';
 
  request(url, function(error, response, body){
 
