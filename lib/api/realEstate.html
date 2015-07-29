@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var data = [];
+        $(document).ready(function () {
+            var data = [];
+            var url = 'https://www.walkscore.com/auth/_pv/overview/2272 Oak Haven Avenue?d=current&address=afsdafds&latitude=12.7  78i6 nbn';
+            
+            
+        });
+
+        function getWalkScore(address) {
+            var url = 'http://10.22.253.245/walkscore?address=' + address;
+            var walkscore = 0;
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    var json = JSON.parse(data);
+                    walkscore = json.walkscore;
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            var x = getOpenRealEstate(47.6097, -122.3331, 2);
+            var y = getWalkScore('9844 NE 27th street Bellevue WA 98004');
+            //alert(x[0].address);
+        });
+
+        function getOpenRealEstate(latitude, longitude, miles) {
+            var results = [];
+            var radius = miles * 1600;
+            var url = 'http://10.22.253.245/catylist?latitude=' + latitude + "&longitude=" + longitude + '&radius=' + radius;
+            $.ajax({
+                url: url,
+                dataType: 'text',
+                async: false,
+                success: function (data) {
+                    var str = data.substring(data.indexOf('CDATA') + 6);
+                    str = str.substring(0, str.indexOf(']]>'));
+                    var json = JSON.parse(str);
+
+                    $.each(json, function(key, item) {
+                        var store = {
+                            address: item.address,
+                            price: item.price,
+                            lat: item.latitude,
+                            lng: item.longitude,
+                            overview: item.overview,
+                            size: item.size
+                        }
+                        results.push(store);
+                    });
+                }
+            });
+            return results;
+        }
+    </script>
+    <a id="data"></a>
+</body>
+
+</html>
