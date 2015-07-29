@@ -361,6 +361,10 @@ html, body {
     position: relative;
 }
 
+.navbar-brand {
+    margin-top: -10px;
+}
+
 .ca-icon{
     font-family: 'WebSymbolsRegular', cursive;
     font-size: 40px;
