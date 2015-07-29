@@ -13,7 +13,7 @@ var showMapView = function() {
   $('#mid').attr('id','finish');
 
 
-  $("body").removeClass("startview")
+  $("body").removeClass("medview")
     .addClass("mapview");
 
   recalcSize();
@@ -60,6 +60,8 @@ var showFilterView = function() {
   $('#searchbox-large').attr('id','searchbox-mid');
   $('#start').attr('id','mid');
   console.log("called or not");
+  $("body").removeClass("startview")
+      .addClass("medview");
   currView = MEDVIEW;
   return false;
 };

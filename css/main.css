@@ -39,11 +39,35 @@ html, body {
   transition:1.5s;
 }
 
+.medview #side-bar-tabs {
+  display:none;
+}
+.medview #results {
+  display: none;
+}
+
 .mapview .side-bar {
   height: 100%;
   width: 240px;
   float: right;
   padding: 0;
+}
+
+.startview #explanation {
+  display: none;
+}
+.mapview #explanation {
+  display: none;
+}
+
+.startview #go-to-mapview {
+  display: none;
+}
+.medview #go-to-mapview {
+
+}
+.mapview #go-to-mapview {
+  display:none;
 }
 
 #side-bar-tabs {
