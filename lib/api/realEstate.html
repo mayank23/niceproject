@@ -34,6 +34,7 @@
                 propertyScores = propertyScores.sort(function(a,b){
                     return b.score - a.score;
                 });
+                console.log(propertyScores);
         }
 
         function checkAllFinished(count)
@@ -57,6 +58,8 @@
                 count++;
                 checkAllFinished(count);
             });
+
+            //getOriginDistanceScore(properties[i]., longitude, originLat, originLong, radius, userRank, callback)
 
             /*
             
@@ -171,7 +174,7 @@
 
         function getCompetitorScore(competitors, originLat, originLon, userRank, callback) {
             var closeCompetitors = 0;
-            var result =0;
+            var result = 0;
             for (var i = 0; i < competitors.length; i++) {
                 var comp = competitors[i];
 
@@ -179,7 +182,7 @@
                     closeCompetitors++;
                 }
                 if (closeCompetitors > 10) {
-                    return callback(0);
+                    callback(0, 0);
                 }
             }
             if (closeCompetitors > 10) {
@@ -193,13 +196,13 @@
             } else {
                 result = 4 * userRank;
             }
-            callback(result);
+            callback(result, 4 * userRank);
         }
 
-        function getOriginDistanceScore(latitude, longitude, originLat, originLong, radius, userRank) {
-            var dist = getOriginDistanceScore(latitude, longitude, originLat, originLong);
+        function getOriginDistanceScore(latitude, longitude, originLat, originLong, radius, userRank, callback) {
+            var dist = getDistance(latitude, longitude, originLat, originLong);
             var num = 4 - Math.floor(Math.round(dist / radius * 100) / 20);
-            return num * userRank;
+            callback(num * userRank, 4 * userRank);
         }
 
         function getRestaurantScore(competitors, originLat, originLon, userRank, callback) {
@@ -223,7 +226,7 @@
             } else {
                 result =  4 * userRank;
             }
-            callback(result);
+            callback(result, 4 * userRank);
         }
 
         function getWalkScore(address, userRank, callback) {
@@ -246,13 +249,14 @@
                     } else {
                         result =  0;
                     }
+
                     callback(result, 4*userRank);
                 }
             });
         }
-   
-        function getPriceScore(maxPrice, curPrice, callback) {
-            return curPrice > maxPrice ? callback(0,0) : callback(4,4);
+
+        function getPriceScore(maxPrice, curPrice, userRank, callback) {
+            return callback(curPrice > maxPrice ? callback(0) : callback(4), 4 * userRank);
         }
 
 
