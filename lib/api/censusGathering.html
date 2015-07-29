@@ -10,21 +10,31 @@
 
         censusModule.enable("c1b2930d3ce73910373c35fe2a4bddae76fd3492");
 
-        var request = {
-            "lat": 38.9047,
-            "lng": -77.0164,
-            "level": "state",
-            "variables": [
-                "income",
-                "population"
-            ]
-        };
+        function gatherCensusData(zipCode) {
+            var request = {
+                "level": "tract",
+                "zip": zipCode,
+                "variables": [
+                    "population",
+                    "population_white_alone",
+                    "population_black_alone",
+                    "population_asian_alone",
+                    "population_hispanic_origin",
+                    "income_per_capita",
+                    "age",
+                    "median_home_value"
+                ]}
 
-        censusModule.APIRequest(request, function(response) {
-            console.log(response);
+                censusModule.APIRequest(request, function (response) {
+                        myFunctionRocks(response.data[0])
+                    });
+        }
 
-        });
+        function myFunctionRocks(data) {
+            console.log(data);
+        }
 
+        gatherCensusData(90210);
 
     </script>
 
