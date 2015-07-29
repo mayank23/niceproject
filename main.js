@@ -11,8 +11,8 @@
       function generateRecommended(address, filters)
       {
            // get all open real estate.
-           olat = address.location.geometry.G;
-           olong = address.location.geometry.K;
+           olat = address.geometry.location.G;
+           olong = address.geometry.location.K;
             getOpenRealEstate(olat, olong, 2, function(list){
                 properties = list;
                 
