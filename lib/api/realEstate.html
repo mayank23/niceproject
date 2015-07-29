@@ -7,11 +7,9 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
     <script>
         var data = [];
-        $(document).ready(function () {
-            var data = [];
-            var url = 'https://www.walkscore.com/auth/_pv/overview/2272 Oak Haven Avenue?d=current&address=afsdafds&latitude=12.7  78i6 nbn';
-            
-            
+
+        $(document).ready(function() {
+            getOpenRealEstate(33.4500, -112.0667, 2);
         });
 
         function getWalkScore(address) {
@@ -25,13 +23,7 @@
                     walkscore = json.walkscore;
                 }
             });
-        }
-
-        $(document).ready(function() {
-            var x = getOpenRealEstate(47.6097, -122.3331, 2);
-            var y = getWalkScore('9844 NE 27th street Bellevue WA 98004');
-            //alert(x[0].address);
-        });
+        } 
 
         function getOpenRealEstate(latitude, longitude, miles) {
             var results = [];
@@ -47,21 +39,148 @@
                     var json = JSON.parse(str);
 
                     $.each(json, function(key, item) {
-                        var store = {
-                            address: item.address,
-                            price: item.price,
-                            lat: item.latitude,
-                            lng: item.longitude,
-                            overview: item.overview,
-                            size: item.size
+                        if (item.price != "") {
+                            var size = getRealEstateSize(item.size);
+                            var store = {
+                                address: item.address,
+                                price: getRealEstatePrice(item.price, size),
+                                lat: item.latitude,
+                                lng: item.longitude,
+                                overview: item.overview,
+                                size: item.size
+                            }
+                            results.push(store);
                         }
-                        results.push(store);
                     });
                 }
             });
             return results;
         }
+
+        function getRealEstatePrice(size) {
+            if (size.indexOf('-') > -1) {
+                size = size.substring(size.indexOf('-') + 2);
+            }
+            if (size.indexOf('SF') > 0) {
+                size = size.substring(0, size.indexOf('SF') - 1);
+                return parseInt(size);
+            }
+            if (size.indexOf('Acres')) {
+                size = size.substring(0, size.indexOf('Acres'));
+                return Math.round(parseFloat(size) * 43560);
+            }
+        }
+
+        function getRealEstatePrice(price, size) {
+            var cost = 0;
+            price = price.substr(1);
+            if (price.indexOf('PSF') > -1) {
+                price = price.substring(0, price.indexOf('PSF') - 1);
+                var cost = parseFloat(price) * size / 12;
+            }
+        }
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+            var dLon = deg2rad(lon2 - lon1);
+            var a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2)
+            ;
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var ktm = .621371; // km to miles
+            var d = R * c; // Distance in km
+            return d * ktm;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+
+        function getCompetitorScore(competitors, originLat, originLon, userRank) {
+            var closeCompetitors = 0;
+            for (var i = 0; i < competitors.length; i++) {
+                var comp = competitors[i];
+                if (getDistance(comp.lat, comp.long, originLat, originLon) <= 5) {
+                    closeCompetitors++;
+                }
+                if (closeCompetitors > 10) {
+                    return 0;
+                }
+            }
+            if (closeCompetitors > 10) {
+                return 0;
+            } else if (closeCompetitors >= 8) {
+                return 1 * userRank;
+            } else if (closeCompetitors >= 5) {
+                return 2 * userRank;
+            } else if (closeCompetitors >= 2) {
+                return 3 * userRank;
+            } else {
+                return 4 * userRank;
+            }
+        }
+
+        function getOriginDistanceScore(latitude, longitude, originLat, originLong, radius, userRank) {
+            var dist = getOriginDistanceScore(latitude, longitude, originLat, originLong);
+            var num = 4 - Math.floor(Math.round(dist / radius * 100) / 20);
+            return num * userRank;
+        }
+
+        function getRestaurantScore(competitors, originLat, originLon, userRank) {
+            var minDistance = 0;
+            for (var i = 0; i < competitors.length; i++) {
+                var comp = competitors[i];
+                if (getDistance(comp.lat, comp.long, originLat, originLon) < minDistance) {
+                    minDistance = getDistance(comp.lat, comp.long, originLat, originLon);
+                }
+            }
+            if (minDistance > 20) {
+                return 0;
+            } else if (minDistance >= 15) {
+                return 1 * userRank;
+            } else if (minDistance >= 9) {
+                return 2 * userRank;
+            } else if (minDistance >= 3) { 
+                return 3 * userRank;
+            } else {
+                return 4 * userRank;
+            }
+        }
+
+        function getWalkScore(address, userRank) {
+            var url = 'http://10.22.253.245/walkscore?address=' + address;
+            var walkscore = 0;
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    var json = JSON.parse(data);
+                    walkscore = json.walkscore;
+                }
+            });
+            if (walkscore > 80) {
+                return 4 * userRank;
+            } else if (walkscore > 60) {
+                return 3 * userRank;
+            } else if (walkscore > 40) {
+                return 2 * userRank;
+            } else if (walkscore > 20) {
+                return 1 * userRank;
+            } else {
+                return 0;
+            }
+        }
+   
+        function getPriceScore(maxPrice, curPrice) {
+            return curPrice > maxPrice ? 0 : 4;
+        }
+    
     </script>
+
     <a id="data"></a>
 </body>
 
